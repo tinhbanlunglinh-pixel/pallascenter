@@ -3,7 +3,7 @@ import { FirebaseConfig } from '../types';
 const FIREBASE_CONFIG_KEY = 'mrs_dung_firebase_config';
 
 /**
- * Default Firebase Configuration provided for English Mrs Dung
+ * Default Firebase Configuration provided for Pallas English
  */
 export const DEFAULT_FIREBASE_CONFIG: FirebaseConfig = {
   apiKey: "AIzaSyAwl9RWxJATZbh_OD7cfOVN_ikC4InK_4k",
@@ -111,7 +111,7 @@ export const testFirebaseConnection = async (): Promise<{ success: boolean; mess
     const res = await fetch(`${testEndpoint}${authParam}`, {
       method: 'PUT',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ timestamp: Date.now(), client: 'Mrs Dung App' })
+      body: JSON.stringify({ timestamp: Date.now(), client: 'Pallas English App' })
     });
     if (res.ok) {
       return { success: true, message: 'Kết nối Firebase Realtime Database thành công! 🟢' };

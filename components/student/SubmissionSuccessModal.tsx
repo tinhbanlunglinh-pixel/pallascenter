@@ -68,18 +68,18 @@ export const SubmissionSuccessModal: React.FC<SubmissionSuccessModalProps> = ({
         </button>
 
         {/* Header Banner */}
-        <div className="bg-gradient-to-br from-emerald-600 via-teal-600 to-emerald-700 p-6 sm:p-7 text-white text-center relative overflow-hidden">
+        <div className="bg-gradient-to-br from-brand-900 via-brand-800 to-brand-700 p-6 sm:p-7 text-white text-center relative overflow-hidden">
           {/* Background Decorative Emojis */}
           <div className="absolute -top-3 -left-3 text-5xl opacity-20 select-none pointer-events-none">🎉</div>
           <div className="absolute top-2 -right-2 text-5xl opacity-20 select-none pointer-events-none">⭐</div>
           <div className="absolute -bottom-4 right-10 text-6xl opacity-15 select-none pointer-events-none">🏆</div>
 
           {/* Big Checkmark */}
-          <div className="w-20 h-20 bg-white rounded-full flex items-center justify-center text-4xl shadow-xl mx-auto mb-3 text-emerald-600 border-4 border-emerald-100 transform hover:scale-105 transition-transform">
+          <div className="w-20 h-20 bg-white rounded-full flex items-center justify-center text-4xl shadow-xl mx-auto mb-3 text-brand-600 border-4 border-brand-100 transform hover:scale-105 transition-transform">
             ✅
           </div>
 
-          <div className="inline-flex items-center gap-1.5 px-3 py-1 bg-white/20 rounded-full text-xs font-black uppercase tracking-wider mb-2 text-emerald-100">
+          <div className="inline-flex items-center gap-1.5 px-3 py-1 bg-white/20 rounded-full text-xs font-black uppercase tracking-wider mb-2 text-brand-100">
             <span>🎉</span> THÔNG BÁO TỪ HỆ THỐNG
           </div>
 
@@ -87,8 +87,8 @@ export const SubmissionSuccessModal: React.FC<SubmissionSuccessModalProps> = ({
             NỘP BÀI THÀNH CÔNG!
           </h2>
 
-          <p className="text-emerald-100 text-xs sm:text-sm font-semibold mt-1">
-            Bài làm của con đã được gửi thành công đến hệ thống của Cô Dung!
+          <p className="text-brand-100 text-xs sm:text-sm font-semibold mt-1">
+            Bài làm của con đã được gửi thành công đến hệ thống của Cô Trang (Trung Tâm Pallas)!
           </p>
         </div>
 
@@ -113,19 +113,19 @@ export const SubmissionSuccessModal: React.FC<SubmissionSuccessModalProps> = ({
           </div>
 
           {/* Score & Evaluation Highlight */}
-          <div className="bg-gradient-to-r from-emerald-50 via-teal-50 to-emerald-50 rounded-2xl p-5 border-2 border-emerald-200 text-center space-y-2">
+          <div className="bg-gradient-to-r from-brand-50 via-amber-50 to-brand-50 rounded-2xl p-5 border-2 border-brand-200 text-center space-y-2">
             <p className="text-xs font-bold text-slate-500 uppercase tracking-widest">
               Kết Quả Của Con
             </p>
             <div className="flex items-baseline justify-center gap-1.5">
-              <span className="text-5xl sm:text-6xl font-black text-emerald-700 leading-none">
+              <span className="text-5xl sm:text-6xl font-black text-brand-700 leading-none">
                 {score.toFixed(1)}
               </span>
               <span className="text-xl font-bold text-slate-400">/10</span>
             </div>
 
-            <div className="inline-block text-xs sm:text-sm font-bold text-emerald-800 bg-white/80 px-3 py-1 rounded-full border border-emerald-200 shadow-xs">
-              Số câu đúng: <strong className="font-black text-emerald-900">{displayCorrect}/{safeTotalQuestions}</strong> câu
+            <div className="inline-block text-xs sm:text-sm font-bold text-brand-800 bg-white/80 px-3 py-1 rounded-full border border-brand-200 shadow-xs">
+              Số câu đúng: <strong className="font-black text-brand-900">{displayCorrect}/{safeTotalQuestions}</strong> câu
             </div>
 
             {/* Hiển thị chi tiết nộp bài quá hạn nếu có */}
@@ -143,7 +143,7 @@ export const SubmissionSuccessModal: React.FC<SubmissionSuccessModalProps> = ({
                 isHigh
                   ? 'bg-amber-400 text-amber-950'
                   : isPass
-                  ? 'bg-emerald-500 text-white'
+                  ? 'bg-brand-600 text-white'
                   : 'bg-orange-500 text-white'
               }`}>
                 <span>{evaluation?.emoji || '🎉'}</span>
@@ -158,11 +158,11 @@ export const SubmissionSuccessModal: React.FC<SubmissionSuccessModalProps> = ({
             )}
           </div>
 
-          {/* Note from Mrs. Dung */}
+          {/* Note from Ms. Trang */}
           <div className="bg-amber-50 rounded-xl p-3 border border-amber-200 text-left flex items-start gap-2.5">
             <span className="text-xl shrink-0">👩‍🏫</span>
             <p className="text-xs text-amber-900 font-medium leading-relaxed">
-              <strong>Lời dặn cô Dung:</strong> Mỗi link bài cô giao con chỉ làm và nộp 1 lần duy nhất, chỉ được làm lại khi Cô Dung cho phép. Kết quả đã được ghi nhận vào hệ thống lớp rồi nhé!
+              <strong>Lời dặn cô Trang:</strong> Mỗi link bài cô giao con chỉ làm và nộp 1 lần duy nhất, chỉ được làm lại khi Cô Trang cho phép. Kết quả đã được ghi nhận vào hệ thống lớp rồi nhé!
             </p>
           </div>
 

@@ -190,11 +190,9 @@ export const login = (
     cleanUser === 'cô trang' ||
     cleanUser === 'cotrang' ||
     cleanUser === 'trang' ||
-    cleanUser === 'mrs. dung' ||
-    cleanUser === 'mrs dung' ||
-    cleanUser === 'mrsdung' ||
+    cleanUser === 'pallas' ||
     normalizedUser === 'mstrang' ||
-    normalizedUser === 'mrsdung';
+    normalizedUser === 'pallas';
 
   if (isMatchTeacherUsername || expectedRole === 'teacher') {
     // Check if password matches custom password OR 123 OR default 88889999

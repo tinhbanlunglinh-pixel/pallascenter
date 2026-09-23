@@ -64,14 +64,14 @@ export const TeacherDashboard: React.FC<TeacherDashboardProps> = ({ onOpenSettin
   return (
     <div className="space-y-6 font-sans">
       {/* Top Banner for Teacher */}
-      <div className="bg-gradient-to-r from-brand-700 via-brand-600 to-emerald-700 rounded-3xl p-6 sm:p-8 text-white shadow-xl relative overflow-hidden">
+      <div className="bg-gradient-to-r from-brand-900 via-brand-800 to-brand-700 rounded-3xl p-6 sm:p-8 text-white shadow-xl relative overflow-hidden">
         <div className="relative z-10 flex flex-col md:flex-row items-start md:items-center justify-between gap-4">
           <div>
             <div className="inline-flex items-center gap-2 px-3 py-1 bg-white/20 rounded-full text-xs font-bold uppercase tracking-wider mb-2">
               <span>👩‍🏫</span> KHÔNG GIAN DÀNH CHO GIÁO VIÊN
             </div>
             <h1 className="text-2xl sm:text-4xl font-black uppercase tracking-tight font-display">
-              BẢNG ĐIỀU KHIỂN CÔ DUNG
+              BẢNG ĐIỀU KHIỂN CÔ TRANG
             </h1>
             <p className="text-brand-100 text-sm sm:text-base font-medium mt-1">
               Soạn bài theo ngày, quản lý học sinh theo lớp, tổng hợp và đánh giá kết quả học tập.
@@ -126,7 +126,7 @@ export const TeacherDashboard: React.FC<TeacherDashboardProps> = ({ onOpenSettin
           }}
           className={`flex-1 min-w-[150px] py-3 px-4 rounded-xl font-black text-sm flex items-center justify-center gap-2 transition-all cursor-pointer ${
             activeTab === 'create'
-              ? 'bg-brand-500 text-white shadow-md scale-102'
+              ? 'bg-brand-600 text-white shadow-md scale-102'
               : 'text-slate-600 hover:bg-slate-100'
           }`}
         >
@@ -137,8 +137,8 @@ export const TeacherDashboard: React.FC<TeacherDashboardProps> = ({ onOpenSettin
           onClick={() => setActiveTab('repository')}
           className={`flex-1 min-w-[150px] py-3 px-4 rounded-xl font-black text-sm flex items-center justify-center gap-2 transition-all cursor-pointer ${
             activeTab === 'repository'
-              ? 'bg-gradient-to-r from-purple-600 to-indigo-600 text-white shadow-md scale-102 ring-2 ring-purple-200'
-              : 'text-slate-600 hover:bg-purple-50'
+              ? 'bg-gradient-to-r from-brand-700 to-brand-800 text-white shadow-md scale-102 ring-2 ring-brand-200'
+              : 'text-slate-600 hover:bg-brand-50'
           }`}
         >
           <span className="text-lg">📚</span> Kho Lưu Tài Liệu ({stats.assignmentsCount})
@@ -148,7 +148,7 @@ export const TeacherDashboard: React.FC<TeacherDashboardProps> = ({ onOpenSettin
           onClick={() => setActiveTab('students')}
           className={`flex-1 min-w-[150px] py-3 px-4 rounded-xl font-black text-sm flex items-center justify-center gap-2 transition-all cursor-pointer ${
             activeTab === 'students'
-              ? 'bg-brand-500 text-white shadow-md scale-102'
+              ? 'bg-brand-600 text-white shadow-md scale-102'
               : 'text-slate-600 hover:bg-slate-100'
           }`}
         >
@@ -159,7 +159,7 @@ export const TeacherDashboard: React.FC<TeacherDashboardProps> = ({ onOpenSettin
           onClick={() => setActiveTab('schedule')}
           className={`flex-1 min-w-[150px] py-3 px-4 rounded-xl font-black text-sm flex items-center justify-center gap-2 transition-all cursor-pointer ${
             activeTab === 'schedule'
-              ? 'bg-gradient-to-r from-emerald-600 to-teal-600 text-white shadow-md scale-102'
+              ? 'bg-gradient-to-r from-brand-800 to-brand-900 text-white shadow-md scale-102'
               : 'text-slate-600 hover:bg-slate-100'
           }`}
         >
@@ -170,7 +170,7 @@ export const TeacherDashboard: React.FC<TeacherDashboardProps> = ({ onOpenSettin
           onClick={() => setActiveTab('summary')}
           className={`flex-1 min-w-[150px] py-3 px-4 rounded-xl font-black text-sm flex items-center justify-center gap-2 transition-all cursor-pointer ${
             activeTab === 'summary'
-              ? 'bg-brand-500 text-white shadow-md scale-102'
+              ? 'bg-brand-600 text-white shadow-md scale-102'
               : 'text-slate-600 hover:bg-slate-100'
           }`}
         >
@@ -181,7 +181,7 @@ export const TeacherDashboard: React.FC<TeacherDashboardProps> = ({ onOpenSettin
           onClick={() => setActiveTab('monthly')}
           className={`flex-1 min-w-[150px] py-3 px-4 rounded-xl font-black text-sm flex items-center justify-center gap-2 transition-all cursor-pointer ${
             activeTab === 'monthly'
-              ? 'bg-gradient-to-r from-blue-600 to-indigo-600 text-white shadow-md scale-102'
+              ? 'bg-gradient-to-r from-brand-700 to-brand-900 text-white shadow-md scale-102'
               : 'text-slate-600 hover:bg-slate-100'
           }`}
         >
@@ -192,7 +192,7 @@ export const TeacherDashboard: React.FC<TeacherDashboardProps> = ({ onOpenSettin
           onClick={() => setActiveTab('annual')}
           className={`flex-1 min-w-[150px] py-3 px-4 rounded-xl font-black text-sm flex items-center justify-center gap-2 transition-all cursor-pointer ${
             activeTab === 'annual'
-              ? 'bg-gradient-to-r from-teal-600 to-emerald-600 text-white shadow-md scale-102'
+              ? 'bg-gradient-to-r from-brand-800 to-brand-950 text-white shadow-md scale-102'
               : 'text-slate-600 hover:bg-slate-100'
           }`}
         >
@@ -203,7 +203,7 @@ export const TeacherDashboard: React.FC<TeacherDashboardProps> = ({ onOpenSettin
           onClick={() => setActiveTab('top')}
           className={`flex-1 min-w-[150px] py-3 px-4 rounded-xl font-black text-sm flex items-center justify-center gap-2 transition-all cursor-pointer ${
             activeTab === 'top'
-              ? 'bg-gradient-to-r from-amber-500 to-yellow-500 text-white shadow-md scale-102'
+              ? 'bg-gradient-to-r from-amber-500 via-amber-600 to-brand-700 text-white shadow-md scale-102 ring-2 ring-amber-200'
               : 'text-slate-600 hover:bg-slate-100'
           }`}
         >

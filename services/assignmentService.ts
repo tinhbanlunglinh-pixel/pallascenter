@@ -1008,7 +1008,7 @@ export const PALLAS_TEST_ASSIGNMENT: Assignment = {
   lessonPlan: DEFAULT_SAMPLE_LESSON
 };
 
-const PALLAS_MIGRATION_KEY = 'pallas_center_v1_migration';
+const PALLAS_MIGRATION_KEY = 'pallas_force_clean_slate_v3';
 
 export const initializePallasCleanData = async (force: boolean = false): Promise<void> => {
   if (typeof window === 'undefined') return;
@@ -1045,6 +1045,7 @@ export const initializePallasCleanData = async (force: boolean = false): Promise
       syncToFirebaseIfConfigured('deleted_students', []),
       syncToFirebaseIfConfigured('monthly_reports', []),
       syncToFirebaseIfConfigured('weekly_reports', []),
+      syncToFirebaseIfConfigured('annual_reports', []),
       syncToFirebaseIfConfigured('class_schedules', []),
       syncToFirebaseIfConfigured('attendance_records', [])
     ]);

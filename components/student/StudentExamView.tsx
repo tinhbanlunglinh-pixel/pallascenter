@@ -86,7 +86,7 @@ export const StudentExamView: React.FC<StudentExamViewProps> = ({
       <div className="p-8 text-center bg-white rounded-3xl shadow-xl border border-rose-200 space-y-4">
         <p className="text-4xl">⚠️</p>
         <h2 className="text-xl font-black text-rose-700">Không tìm thấy dữ liệu đề thi</h2>
-        <p className="text-slate-600 text-sm">Vui lòng liên hệ với Cô Dung để được hỗ trợ nhé!</p>
+        <p className="text-slate-600 text-sm">Vui lòng liên hệ với Cô Trang để được hỗ trợ nhé!</p>
         <button
           onClick={onBack}
           className="px-6 py-2.5 bg-brand-500 text-white font-bold rounded-xl shadow hover:bg-brand-600"
@@ -128,7 +128,7 @@ export const StudentExamView: React.FC<StudentExamViewProps> = ({
   };
 
   const getEvaluation = (scoreOn10: number) => {
-    if (scoreOn10 >= 9) return { text: "XUẤT SẮC", emoji: "🏆", level: "EXCELLENT", praise: "Con làm bài thi tuyệt đỉnh, xứng đáng là ngôi sao sáng của Mrs. Dung!" };
+    if (scoreOn10 >= 9) return { text: "XUẤT SẮC", emoji: "🏆", level: "EXCELLENT", praise: "Con làm bài thi tuyệt đỉnh, xứng đáng là ngôi sao sáng của Trung Tâm Pallas!" };
     if (scoreOn10 >= 8) return { text: "GIỎI", emoji: "🌟", level: "GREAT JOB", praise: "Con hoàn thành bài kiểm tra rất tốt, nắm chắc kiến thức!" };
     if (scoreOn10 >= 6.5) return { text: "KHÁ", emoji: "👍", level: "GOOD EFFORT", praise: "Con đã nỗ lực nhiều, cùng cố gắng hơn ở các bài tiếp theo nhé!" };
     if (scoreOn10 >= 5) return { text: "TRUNG BÌNH", emoji: "💪", level: "KEEP IT UP", praise: "Con đã vượt qua bài thi! Hãy rèn luyện thêm để bứt phá nhé!" };
@@ -143,7 +143,7 @@ export const StudentExamView: React.FC<StudentExamViewProps> = ({
     }
 
     if (isSubmitted || existingSubmission) {
-      alert('Con đã hoàn thành bài thi này rồi! Link cô giao mỗi học sinh chỉ được làm bài 1 lần duy nhất. Con chỉ có thể làm lại khi được Cô Dung cho phép.');
+      alert('Con đã hoàn thành bài thi này rồi! Link cô giao mỗi học sinh chỉ được làm bài 1 lần duy nhất. Con chỉ có thể làm lại khi được Cô Trang cho phép.');
       return;
     }
 
@@ -654,7 +654,7 @@ export const StudentExamView: React.FC<StudentExamViewProps> = ({
               }}
               disabled={isSubmitting}
               className={`w-full py-4 text-white rounded-2xl font-black text-lg sm:text-xl shadow-xl transition-all transform active:scale-98 flex items-center justify-center gap-2 ${
-                isSubmitting ? 'bg-slate-400 cursor-not-allowed' : 'bg-emerald-600 hover:bg-emerald-700'
+                isSubmitting ? 'bg-slate-400 cursor-not-allowed' : 'bg-brand-600 hover:bg-brand-700 shadow-brand-200'
               }`}
             >
               {isSubmitting ? (
@@ -663,7 +663,7 @@ export const StudentExamView: React.FC<StudentExamViewProps> = ({
                 </>
               ) : (
                 <>
-                  <span>🚀</span> NỘP BÀI KIỂM TRA CHO CÔ DUNG
+                  <span>🚀</span> NỘP BÀI KIỂM TRA CHO CÔ TRANG
                 </>
               )}
             </button>

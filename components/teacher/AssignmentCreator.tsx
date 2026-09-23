@@ -309,7 +309,7 @@ export const AssignmentCreator: React.FC<AssignmentCreatorProps> = ({
         });
 
         setPreservedExam(examData);
-        setAssignmentTitle(prev => prev.trim() ? prev : (examData.title || 'Đề kiểm tra tiếng Anh Mrs. Dung'));
+        setAssignmentTitle(prev => prev.trim() ? prev : (examData.title || 'Đề kiểm tra tiếng Anh Pallas'));
       } catch (err: any) {
         setError(err.message || 'Có lỗi xảy ra khi bóc tách đề thi. Cô hãy kiểm tra lại file đề thi nhé!');
       } finally {
@@ -336,7 +336,7 @@ export const AssignmentCreator: React.FC<AssignmentCreatorProps> = ({
       );
 
       setLessonPlan(data);
-      setAssignmentTitle(prev => prev.trim() ? prev : (data.topic || topic || activeTopic || 'Bài tập tiếng Anh Mrs. Dung'));
+      setAssignmentTitle(prev => prev.trim() ? prev : (data.topic || topic || activeTopic || 'Bài tập tiếng Anh Pallas'));
     } catch (err: any) {
       setError(err.message || 'Có lỗi xảy ra khi tạo bài giảng AI. Cô hãy kiểm tra lại kết nối hoặc API Key nhé!');
     } finally {
@@ -1009,7 +1009,7 @@ export const AssignmentCreator: React.FC<AssignmentCreatorProps> = ({
             {/* Lời dặn dò */}
             <div>
               <label className="block text-xs font-black text-slate-700 uppercase tracking-wider mb-1.5">
-                👩‍🏫 Lời Dặn Của Cô Dung
+                👩‍🏫 Lời Dặn Của Cô Trang
               </label>
               <textarea
                 value={teacherNote}
@@ -1025,7 +1025,7 @@ export const AssignmentCreator: React.FC<AssignmentCreatorProps> = ({
               <button
                 type="button"
                 onClick={handlePublishAssignment}
-                className="w-full py-4 bg-emerald-600 hover:bg-emerald-700 text-white rounded-2xl font-black text-lg sm:text-xl shadow-xl transition-all transform active:scale-98 flex items-center justify-center gap-2 cursor-pointer"
+                className="w-full py-4 bg-brand-600 hover:bg-brand-700 text-white rounded-2xl font-black text-lg sm:text-xl shadow-xl transition-all transform active:scale-98 flex items-center justify-center gap-2 cursor-pointer shadow-brand-200"
               >
                 {publishedSuccess ? (
                   <>
@@ -1054,7 +1054,7 @@ export const AssignmentCreator: React.FC<AssignmentCreatorProps> = ({
         return (
           <div className="space-y-8 animate-fade-in font-sans">
             {/* Thanh thông báo đồng bộ giao diện */}
-            <div className="bg-gradient-to-r from-emerald-600 to-teal-700 text-white rounded-3xl p-5 sm:p-6 shadow-xl flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
+            <div className="bg-gradient-to-r from-brand-900 to-brand-800 text-white rounded-3xl p-5 sm:p-6 shadow-xl flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
               <div className="flex items-center gap-3">
                 <span className="text-3xl sm:text-4xl bg-white/20 p-2 rounded-2xl">👁️</span>
                 <div>
@@ -1062,7 +1062,7 @@ export const AssignmentCreator: React.FC<AssignmentCreatorProps> = ({
                     <span>✨</span> Giao diện xem trước của học sinh
                   </div>
                   <h3 className="text-lg sm:text-2xl font-black">Nội Dung Bài Học Đồng Bộ 100% Cho Học Sinh</h3>
-                  <p className="text-xs sm:text-sm text-emerald-100 font-medium mt-0.5">
+                  <p className="text-xs sm:text-sm text-brand-100 font-medium mt-0.5">
                     Cô có thể kiểm tra từng từ vựng, ngữ pháp, bài đọc và làm thử các bài tập trước khi giao.
                   </p>
                 </div>
@@ -1076,7 +1076,7 @@ export const AssignmentCreator: React.FC<AssignmentCreatorProps> = ({
             {/* Banner Tiêu Đề Bài Học (Giống hệt học sinh) */}
             <div className="bg-white rounded-3xl p-6 sm:p-10 shadow-xl border-4 border-brand-100 text-center space-y-4 relative overflow-hidden">
               <div className="inline-flex items-center gap-2 px-4 py-1.5 bg-brand-50 rounded-full text-xs font-black text-brand-700 uppercase tracking-widest">
-                <span>📖</span> BÀI HỌC CÔ DUNG GIAO
+                <span>📖</span> BÀI HỌC CÔ TRANG GIAO
               </div>
 
               <h1 className="text-2xl sm:text-4xl md:text-5xl font-black text-brand-900 uppercase font-display leading-tight">
@@ -1087,7 +1087,7 @@ export const AssignmentCreator: React.FC<AssignmentCreatorProps> = ({
                 <div className="max-w-2xl mx-auto p-4 rounded-2xl bg-amber-50 border border-amber-200 text-amber-900 text-sm font-medium flex items-center gap-3 text-left">
                   <span className="text-2xl shrink-0">👩‍🏫</span>
                   <div>
-                    <p className="font-bold text-xs uppercase tracking-wider text-amber-800">Lời dặn của Cô Dung:</p>
+                    <p className="font-bold text-xs uppercase tracking-wider text-amber-800">Lời dặn của Cô Trang:</p>
                     <p className="mt-0.5 italic">"{teacherNote}"</p>
                   </div>
                 </div>
@@ -1369,7 +1369,7 @@ export const AssignmentCreator: React.FC<AssignmentCreatorProps> = ({
 
                 <div className="col-span-full">
                   <label className="block text-xs font-black text-slate-700 uppercase tracking-wider mb-1.5">
-                    💬 Lời Nhắn Dặn Của Cô Dung Cho Học Sinh
+                    💬 Lời Nhắn Dặn Của Cô Trang Cho Học Sinh
                   </label>
                   <input
                     type="text"
@@ -1385,7 +1385,7 @@ export const AssignmentCreator: React.FC<AssignmentCreatorProps> = ({
                 <button
                   onClick={handlePublishAssignment}
                   disabled={publishedSuccess || (!isAllMode && selectedClassIds.length === 0)}
-                  className="w-full py-4 bg-emerald-600 hover:bg-emerald-700 disabled:bg-slate-300 disabled:cursor-not-allowed text-white rounded-2xl font-black text-xl shadow-xl transition-all transform active:scale-98 flex items-center justify-center gap-2 cursor-pointer"
+                  className="w-full py-4 bg-brand-600 hover:bg-brand-700 shadow-brand-200 disabled:bg-slate-300 disabled:cursor-not-allowed text-white rounded-2xl font-black text-xl shadow-xl transition-all transform active:scale-98 flex items-center justify-center gap-2 cursor-pointer"
                 >
                   {publishedSuccess ? (
                     <>
@@ -1405,7 +1405,7 @@ export const AssignmentCreator: React.FC<AssignmentCreatorProps> = ({
                     onClick={() => {
                       exportAssignmentToWord({
                         id: `assign_${Date.now()}`,
-                        title: assignmentTitle.trim() || 'Bài tập tiếng Anh Mrs. Dung',
+                        title: assignmentTitle.trim() || 'Bài tập tiếng Anh Pallas',
                         topic: lessonPlan.topic || assignmentTitle.trim(),
                         assignedDate,
                         dueDate,
@@ -1416,7 +1416,7 @@ export const AssignmentCreator: React.FC<AssignmentCreatorProps> = ({
                         createdAt: new Date().toISOString()
                       }, true);
                     }}
-                    className="py-3 px-4 bg-blue-600 hover:bg-blue-700 text-white rounded-xl font-black text-xs sm:text-sm shadow-md transition-all flex items-center justify-center gap-2 cursor-pointer"
+                    className="py-3 px-4 bg-brand-700 hover:bg-brand-800 text-white rounded-xl font-black text-xs sm:text-sm shadow-md transition-all flex items-center justify-center gap-2 cursor-pointer"
                     title="Tải xuống đề bài và đáp án chi tiết định dạng Word (.doc)"
                   >
                     <span>📄</span> TẢI FILE WORD (.DOC)
@@ -1427,7 +1427,7 @@ export const AssignmentCreator: React.FC<AssignmentCreatorProps> = ({
                     onClick={() => {
                       exportAssignmentToPdf({
                         id: `assign_${Date.now()}`,
-                        title: assignmentTitle.trim() || 'Bài tập tiếng Anh Mrs. Dung',
+                        title: assignmentTitle.trim() || 'Bài tập tiếng Anh Pallas',
                         topic: lessonPlan.topic || assignmentTitle.trim(),
                         assignedDate,
                         dueDate,
@@ -1438,7 +1438,7 @@ export const AssignmentCreator: React.FC<AssignmentCreatorProps> = ({
                         createdAt: new Date().toISOString()
                       }, true);
                     }}
-                    className="py-3 px-4 bg-purple-600 hover:bg-purple-700 text-white rounded-xl font-black text-xs sm:text-sm shadow-md transition-all flex items-center justify-center gap-2 cursor-pointer"
+                    className="py-3 px-4 bg-brand-800 hover:bg-brand-900 text-white rounded-xl font-black text-xs sm:text-sm shadow-md transition-all flex items-center justify-center gap-2 cursor-pointer"
                     title="Mở trình in ấn A4 hoặc bấm Lưu dưới dạng PDF"
                   >
                     <span>🖨️</span> XUẤT FILE PDF / IN ĐỀ A4

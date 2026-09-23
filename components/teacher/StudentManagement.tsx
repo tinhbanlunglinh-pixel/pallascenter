@@ -461,7 +461,7 @@ export const StudentManagement: React.FC = () => {
     notDoneStudents.forEach((std, idx) => {
       text += `${idx + 1}. ${std.name} ${std.englishName ? `(${std.englishName})` : ''}\n`;
     });
-    text += `\nKính nhờ quý phụ huynh nhắc nhở các con tranh thủ vào làm bài và nộp bài để cô Dung chấm điểm nhé! Cô cảm ơn phụ huynh ạ! ❤️`;
+    text += `\nKính nhờ quý phụ huynh nhắc nhở các con tranh thủ vào làm bài và nộp bài để cô Trang chấm điểm nhé! Cô cảm ơn phụ huynh ạ! ❤️`;
 
     navigator.clipboard.writeText(text);
     setCopiedZaloMsg(true);
@@ -472,7 +472,7 @@ export const StudentManagement: React.FC = () => {
   const handleCopyIndividualReminder = (student: Student) => {
     if (!activeAssignment) return;
     const title = activeAssignment.title || activeAssignment.topic;
-    let text = `Dạ cô Dung xin gửi lời chào đến phụ huynh em ${student.name}${student.englishName ? ` (${student.englishName})` : ''} ạ!\n`;
+    let text = `Dạ cô Trang (Trung Tâm Ngoại Ngữ Pallas) xin gửi lời chào đến phụ huynh em ${student.name}${student.englishName ? ` (${student.englishName})` : ''} ạ!\n`;
     text += `Hiện tại con chưa hoàn thành bài tập "${title}". Nhờ phụ huynh nhắc con mở app làm bài và nộp bài sớm giúp cô nhé! Cô cảm ơn phụ huynh nhiều ạ! ❤️`;
     navigator.clipboard.writeText(text);
     alert(`Đã copy tin nhắn nhắc nhở cho phụ huynh em ${student.name}!\nCô có thể dán vào tin nhắn Zalo gửi ngay cho phụ huynh.`);

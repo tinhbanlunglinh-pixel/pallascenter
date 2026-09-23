@@ -88,7 +88,7 @@ export const TopPerformersHonor: React.FC<TopPerformersHonorProps> = ({ submissi
                 {podiumTop3[0].score.toFixed(1)} <span className="text-xs font-normal text-yellow-100">/10</span>
               </div>
               <p className="text-xs sm:text-sm text-amber-800 mt-2 font-bold">
-                {podiumTop3[0].evaluation?.emoji || '👑'} {podiumTop3[0].evaluation?.praise || 'Ngôi sao sáng nhất lớp Mrs. Dung!'}
+                {podiumTop3[0].evaluation?.emoji || '👑'} {podiumTop3[0].evaluation?.praise || 'Ngôi sao sáng nhất Trung Tâm Pallas!'}
               </p>
             </div>
           )}

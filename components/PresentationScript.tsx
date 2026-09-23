@@ -170,9 +170,9 @@ export const PresentationScriptView: React.FC<PresentationScriptProps> = ({ scri
         {isEvaluating && (
           <div className="flex flex-col items-center gap-4 animate-pulse">
             <div className="flex gap-2">
-              {[1, 2, 3].map(i => <div key={i} className="w-4 h-4 bg-emerald-400 rounded-full animate-bounce" style={{ animationDelay: `${i * 0.2}s` }}></div>)}
+              {[1, 2, 3].map(i => <div key={i} className="w-4 h-4 bg-brand-400 rounded-full animate-bounce" style={{ animationDelay: `${i * 0.2}s` }}></div>)}
             </div>
-            <p className="text-emerald-300 font-black text-3xl uppercase tracking-widest">Mrs. Dung đang chấm điểm...</p>
+            <p className="text-highlight-300 font-black text-3xl uppercase tracking-widest">Cô Trang đang chấm điểm...</p>
           </div>
         )}
 

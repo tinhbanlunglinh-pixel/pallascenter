@@ -40,7 +40,7 @@ export const WeeklyReportAggregator: React.FC = () => {
   const [selectedMonth, setSelectedMonth] = useState<number>(() => currentRealMonth);
   const [selectedYear, setSelectedYear] = useState<number>(() => currentRealYear);
   const [selectedWeek, setSelectedWeek] = useState<number>(1);
-  const [centerName, setCenterName] = useState<string>('ENGLISH MRS. DUNG');
+  const [centerName, setCenterName] = useState<string>('TRUNG TÂM NGOẠI NGỮ PALLAS');
 
   // Sessions in this week
   const [sessions, setSessions] = useState<WeeklySessionConfig[]>([]);
@@ -103,7 +103,7 @@ export const WeeklyReportAggregator: React.FC = () => {
       if (existing.centerName && !existing.centerName.includes('FUTURE STARS')) {
         setCenterName(existing.centerName);
       } else {
-        setCenterName('ENGLISH MRS. DUNG');
+        setCenterName('TRUNG TÂM NGOẠI NGỮ PALLAS');
       }
 
       // Merge existing scores with any newly added students

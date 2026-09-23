@@ -287,14 +287,14 @@ export const StudentDashboard: React.FC = () => {
   return (
     <div className="space-y-6 font-sans">
       {/* Top Banner */}
-      <div className="bg-gradient-to-r from-emerald-600 via-brand-600 to-teal-700 rounded-3xl p-6 sm:p-8 text-white shadow-xl relative overflow-hidden">
+      <div className="bg-gradient-to-r from-brand-900 via-brand-800 to-brand-700 rounded-3xl p-6 sm:p-8 text-white shadow-xl relative overflow-hidden">
         <div className="relative z-10 flex flex-col md:flex-row items-start md:items-center justify-between gap-4">
           <div>
             <div className="inline-flex items-center gap-2 px-3 py-1 bg-white/20 rounded-full text-xs font-bold uppercase tracking-wider mb-2">
               <span>🎒</span> GÓC HỌC TẬP HỌC SINH
             </div>
             <h1 className="text-2xl sm:text-4xl font-black uppercase tracking-tight font-display">
-              CHÀO MỪNG CON ĐẾN VỚI LỚP MRS. DUNG!
+              CHÀO MỪNG CON ĐẾN VỚI TRUNG TÂM PALLAS!
             </h1>
             <p className="text-brand-100 text-sm sm:text-base font-medium mt-1">
               Xem danh sách bài tập cô giao theo ngày, hoàn thành bài tập và nhận ngay chứng nhận điểm cao nhé!
@@ -329,25 +329,25 @@ export const StudentDashboard: React.FC = () => {
 
       {/* Identity Banner / Selector */}
       {isStudentUser ? (
-        <div className="bg-white rounded-3xl p-6 shadow-xl border border-emerald-200 flex flex-col sm:flex-row sm:items-center justify-between gap-4 animate-fade-in">
+        <div className="bg-white rounded-3xl p-6 shadow-xl border border-brand-200 flex flex-col sm:flex-row sm:items-center justify-between gap-4 animate-fade-in">
           <div className="flex items-center gap-4">
-            <div className="w-14 h-14 rounded-2xl bg-emerald-100 border border-emerald-300 flex items-center justify-center text-3xl shadow-sm">
-              {currentUser?.avatar || '🎒'}
+            <div className="w-14 h-14 rounded-2xl bg-brand-50 border border-brand-200 flex items-center justify-center text-3xl shadow-sm text-brand-700">
+              {currentUser?.avatar || '⭐'}
             </div>
             <div>
-              <div className="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full bg-emerald-50 text-emerald-800 text-[11px] font-bold border border-emerald-200 mb-1">
+              <div className="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full bg-brand-50 text-brand-800 text-[11px] font-bold border border-brand-200 mb-1">
                 <span>✓ Đã xác thực tài khoản học sinh</span>
               </div>
               <h2 className="text-xl font-black text-slate-900 leading-tight">
                 {studentName || currentUser?.name || 'Học Sinh'}
               </h2>
               <p className="text-xs font-bold text-slate-500">
-                Lớp: <span className="text-emerald-700 font-black">{selectedClassName}</span>
+                Lớp: <span className="text-brand-700 font-black">{selectedClassName}</span>
               </p>
             </div>
           </div>
           <div className="flex flex-wrap items-center gap-2">
-            <span className="px-3.5 py-2 rounded-xl bg-emerald-50 text-emerald-800 border border-emerald-200 text-xs font-bold">
+            <span className="px-3.5 py-2 rounded-xl bg-brand-50 text-brand-800 border border-brand-200 text-xs font-bold">
               🎯 Đang hiển thị bài tập & kết quả của lớp {selectedClassName}
             </span>
           </div>
@@ -400,8 +400,8 @@ export const StudentDashboard: React.FC = () => {
                     onClick={() => handleSelectStudent(s.name)}
                     className={`px-2.5 py-1 rounded-lg text-xs font-bold transition-all cursor-pointer ${
                       s.name === studentName
-                        ? 'bg-emerald-600 text-white shadow-xs'
-                        : 'bg-slate-50 hover:bg-emerald-50 text-slate-700 border border-slate-200'
+                        ? 'bg-brand-600 text-white shadow-xs'
+                        : 'bg-slate-50 hover:bg-brand-50 text-slate-700 border border-slate-200'
                     }`}
                   >
                     {s.name}
@@ -481,7 +481,7 @@ export const StudentDashboard: React.FC = () => {
                     ? 'Con chưa có bài tập nào đã hoàn thành.'
                     : `Hiện chưa có bài tập nào được giao cho ${selectedClassName}`}
                 </p>
-                <p className="text-xs text-slate-400">Cô Dung sẽ sớm giao thêm bài mới. Hãy quay lại kiểm tra sau nhé!</p>
+                <p className="text-xs text-slate-400">Cô Trang sẽ sớm giao thêm bài mới. Hãy quay lại kiểm tra sau nhé!</p>
               </div>
             ) : (
               <div className="space-y-6">

@@ -247,6 +247,17 @@ export const LoginScreen: React.FC<LoginScreenProps> = ({ onLoginSuccess }) => {
           <p className="text-[11px] text-amber-200/90 italic font-semibold mt-1">
             "Xây nền từ móng, chinh phục đỉnh cao"
           </p>
+          <div className="mt-2.5 flex items-center justify-center">
+            <a
+              href="https://www.facebook.com/trang.phan.9461799"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-white/15 hover:bg-white/25 text-white text-xs font-bold transition-all border border-white/25 shadow-xs"
+            >
+              <span>🌐</span>
+              <span>Facebook Cô Trang</span>
+            </a>
+          </div>
         </div>
 
         {/* Form Container */}
@@ -301,7 +312,7 @@ export const LoginScreen: React.FC<LoginScreenProps> = ({ onLoginSuccess }) => {
                     <select
                       value={studentClassName}
                       onChange={e => handleClassChange(e.target.value)}
-                      className="w-full pl-10 pr-4 py-3 rounded-xl border border-slate-200 focus:border-emerald-500 focus:ring-4 focus:ring-emerald-500/10 outline-none text-sm font-bold bg-white text-slate-800 cursor-pointer"
+                      className="w-full pl-10 pr-4 py-3 rounded-xl border border-slate-200 focus:border-brand-500 focus:ring-4 focus:ring-brand-500/10 outline-none text-sm font-bold bg-white text-slate-800 cursor-pointer"
                     >
                       {classes.length === 0 ? (
                         <option value="">-- Đang đồng bộ danh sách lớp... --</option>
@@ -509,7 +520,7 @@ export const LoginScreen: React.FC<LoginScreenProps> = ({ onLoginSuccess }) => {
               className={`w-full py-3.5 rounded-2xl font-black text-sm text-white shadow-xl transition-all flex items-center justify-center gap-2 ${
                 selectedRole === 'teacher'
                   ? 'bg-brand-600 hover:bg-brand-700 active:scale-98 shadow-brand-500/30'
-                  : 'bg-emerald-600 hover:bg-emerald-700 active:scale-98 shadow-emerald-500/30'
+                  : 'bg-brand-600 hover:bg-brand-700 active:scale-98 shadow-brand-500/30'
               } disabled:opacity-50`}
             >
               {isLoading ? (

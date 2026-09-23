@@ -101,7 +101,7 @@ export const MonthlyReportAggregator: React.FC<MonthlyReportAggregatorProps> = (
   const [selectedClassId, setSelectedClassId] = useState<string>('');
   const [selectedMonth, setSelectedMonth] = useState<number>(getRealCurrentMonth); // Luôn mặc định ở tháng hiện tại thực tế
   const [selectedYear, setSelectedYear] = useState<number>(getRealCurrentYear); // Luôn mặc định ở năm hiện tại thực tế
-  const [centerName, setCenterName] = useState<string>('ENGLISH MRS. DUNG');
+  const [centerName, setCenterName] = useState<string>('TRUNG TÂM NGOẠI NGỮ PALLAS');
   const [isEditingCenter, setIsEditingCenter] = useState(false);
 
   // Sessions in this report (Exactly 8 sessions)
@@ -310,7 +310,7 @@ export const MonthlyReportAggregator: React.FC<MonthlyReportAggregatorProps> = (
       if (existing.centerName && !existing.centerName.includes('FUTURE STARS')) {
         setCenterName(existing.centerName);
       } else {
-        setCenterName('ENGLISH MRS. DUNG');
+        setCenterName('TRUNG TÂM NGOẠI NGỮ PALLAS');
       }
 
       // Lấy lịch chuẩn 8 buổi học thực tế cho tháng và năm này
@@ -501,7 +501,7 @@ export const MonthlyReportAggregator: React.FC<MonthlyReportAggregatorProps> = (
           className: currentClass?.name || 'Lớp học',
           month: selectedMonth,
           year: selectedYear,
-          centerName: existing.centerName || 'ENGLISH MRS. DUNG',
+          centerName: existing.centerName || 'TRUNG TÂM NGOẠI NGỮ PALLAS',
           sessions: activeSessions,
           studentScores: syncResult.updatedScores,
           updatedAt: new Date().toISOString()
@@ -545,7 +545,7 @@ export const MonthlyReportAggregator: React.FC<MonthlyReportAggregatorProps> = (
         className: currentClass?.name || 'Lớp học',
         month: selectedMonth,
         year: selectedYear,
-        centerName: 'ENGLISH MRS. DUNG',
+        centerName: 'TRUNG TÂM NGOẠI NGỮ PALLAS',
         sessions: initial8,
         studentScores: syncResult.updatedScores,
         updatedAt: new Date().toISOString()
@@ -2696,7 +2696,7 @@ export const MonthlyReportAggregator: React.FC<MonthlyReportAggregatorProps> = (
         >
           {/* Top Header: Matching Image 2 */}
           <div className="flex items-center justify-between pb-4 border-b-2 border-emerald-100 relative">
-            {/* Left: Trophy + English Mrs. Dung */}
+            {/* Left: Trophy + Trung Tâm Ngoại Ngữ Pallas */}
             <div className="flex items-center gap-3.5 w-1/4">
               <div className="w-14 h-14 rounded-2xl bg-[#15803d] flex items-center justify-center text-white shadow-md">
                 <svg className="w-8 h-8 text-white" viewBox="0 0 24 24" fill="currentColor">

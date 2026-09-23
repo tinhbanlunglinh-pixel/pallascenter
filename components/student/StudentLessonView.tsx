@@ -190,9 +190,9 @@ export const StudentLessonView: React.FC<StudentLessonViewProps> = ({
 
   function getEvaluation(score: number) {
     const s = score || 0;
-    if (s >= 9) return { text: "XUẤT SẮC", emoji: "🏆", level: "EXCELLENT", praise: "Con là một ngôi sao sáng nhất lớp Mrs. Dung!" };
+    if (s >= 9) return { text: "XUẤT SẮC", emoji: "🏆", level: "EXCELLENT", praise: "Con là một ngôi sao sáng nhất Trung Tâm Pallas!" };
     if (s >= 7) return { text: "KHÁ GIỎI", emoji: "🌟", level: "GREAT JOB", praise: "Con làm bài rất tuyệt vời, tiếp tục phát huy nhé!" };
-    if (s >= 5) return { text: "CỐ GẮNG", emoji: "👍", level: "GOOD EFFORT", praise: "Con đã nỗ lực rất nhiều, Mrs. Dung tự hào về con!" };
+    if (s >= 5) return { text: "CỐ GẮNG", emoji: "👍", level: "GOOD EFFORT", praise: "Con đã nỗ lực rất nhiều, Cô Trang tự hào về con!" };
     return { text: "CẦN NỖ LỰC", emoji: "💪", level: "KEEP IT UP", praise: "Đừng nản lòng con nhé, bài sau mình làm tốt hơn nào!" };
   }
 
@@ -206,7 +206,7 @@ export const StudentLessonView: React.FC<StudentLessonViewProps> = ({
     }
 
     if (isSubmitted || existingSubmission) {
-      alert('Con đã nộp bài tập này rồi! Link cô giao mỗi học sinh chỉ được làm 1 lần duy nhất. Con chỉ có thể làm lại khi được Cô Dung cho phép.');
+      alert('Con đã nộp bài tập này rồi! Link cô giao mỗi học sinh chỉ được làm 1 lần duy nhất. Con chỉ có thể làm lại khi được Cô Trang cho phép.');
       return;
     }
 
@@ -313,7 +313,7 @@ export const StudentLessonView: React.FC<StudentLessonViewProps> = ({
                 CON ĐÃ NỘP BÀI TẬP NÀY (CHẾ ĐỘ XEM LẠI)
               </h4>
               <p className="text-xs text-emerald-700 font-medium mt-0.5">
-                Theo quy định, mỗi học sinh chỉ được làm bài 1 lần. Con đang ở chế độ xem lại bài đã nộp. Chỉ khi Cô Dung cho phép thì con mới có thể làm lại bài.
+                Theo quy định, mỗi học sinh chỉ được làm bài 1 lần. Con đang ở chế độ xem lại bài đã nộp. Chỉ khi Cô Trang cho phép thì con mới có thể làm lại bài.
               </p>
             </div>
           </div>
@@ -366,7 +366,7 @@ export const StudentLessonView: React.FC<StudentLessonViewProps> = ({
       {/* Thông tin bài học do giáo viên giao */}
       <div className="bg-white rounded-3xl p-6 sm:p-10 shadow-xl border-4 border-brand-100 text-center space-y-4 relative overflow-hidden">
         <div className="inline-flex items-center gap-2 px-4 py-1.5 bg-brand-50 rounded-full text-xs font-black text-brand-700 uppercase tracking-widest">
-          <span>📖</span> BÀI HỌC CÔ DUNG GIAO
+          <span>📖</span> BÀI HỌC CÔ TRANG GIAO
         </div>
 
         <h1 className="text-2xl sm:text-4xl md:text-5xl font-black text-brand-900 uppercase font-display leading-tight">
@@ -377,7 +377,7 @@ export const StudentLessonView: React.FC<StudentLessonViewProps> = ({
           <div className="max-w-2xl mx-auto p-4 rounded-2xl bg-amber-50 border border-amber-200 text-amber-900 text-sm font-medium flex items-center gap-3 text-left">
             <span className="text-2xl shrink-0">👩‍🏫</span>
             <div>
-              <p className="font-bold text-xs uppercase tracking-wider text-amber-800">Lời dặn của Cô Dung:</p>
+              <p className="font-bold text-xs uppercase tracking-wider text-amber-800">Lời dặn của Cô Trang:</p>
               <p className="mt-0.5 italic">"{assignment.teacherNote}"</p>
             </div>
           </div>
@@ -479,7 +479,7 @@ export const StudentLessonView: React.FC<StudentLessonViewProps> = ({
               onClick={handleSubmitAssignment}
               disabled={isSubmitting}
               className={`w-full py-4 text-white rounded-2xl font-black text-xl shadow-xl transition-all transform active:scale-98 flex items-center justify-center gap-2 ${
-                isSubmitting ? 'bg-slate-400 cursor-not-allowed' : isOverdue ? 'bg-rose-600 hover:bg-rose-700' : 'bg-emerald-600 hover:bg-emerald-700'
+                isSubmitting ? 'bg-slate-400 cursor-not-allowed' : isOverdue ? 'bg-rose-600 hover:bg-rose-700' : 'bg-brand-600 hover:bg-brand-700 shadow-brand-200'
               }`}
             >
               {isSubmitting ? (
@@ -492,19 +492,19 @@ export const StudentLessonView: React.FC<StudentLessonViewProps> = ({
                 </>
               ) : (
                 <>
-                  <span>🚀</span> NỘP BÀI CHO CÔ DUNG
+                  <span>🚀</span> NỘP BÀI CHO CÔ TRANG
                 </>
               )}
             </button>
           </div>
         ) : (
           <div className="max-w-md mx-auto space-y-3">
-            <div className="p-4 bg-emerald-50 rounded-2xl border-2 border-emerald-300 text-emerald-900 text-sm space-y-1 text-center">
-              <div className="flex items-center justify-center gap-2 font-black text-base text-emerald-800">
+            <div className="p-4 bg-brand-50 rounded-2xl border-2 border-brand-200 text-brand-900 text-sm space-y-1 text-center">
+              <div className="flex items-center justify-center gap-2 font-black text-base text-brand-800">
                 <span>🎉</span> NỘP BÀI THÀNH CÔNG!
               </div>
-              <p className="font-semibold text-emerald-700 text-xs sm:text-sm">
-                Bài làm của con đã được lưu an toàn vào hệ thống của Cô Dung. Con chỉ làm được 1 lần và chỉ làm lại khi Cô Dung cho phép.
+              <p className="font-semibold text-brand-700 text-xs sm:text-sm">
+                Bài làm của con đã được lưu an toàn vào hệ thống của Cô Trang. Con chỉ làm được 1 lần và chỉ làm lại khi Cô Trang cho phép.
               </p>
               {existingSubmission?.isLate && (
                 <p className="text-xs font-bold text-rose-600 pt-1">
@@ -515,7 +515,7 @@ export const StudentLessonView: React.FC<StudentLessonViewProps> = ({
 
             <button
               onClick={() => setShowSuccessModal(true)}
-              className="w-full py-3.5 bg-emerald-600 hover:bg-emerald-700 text-white rounded-2xl font-black text-base shadow-lg transition-all flex items-center justify-center gap-2 cursor-pointer"
+              className="w-full py-3.5 bg-brand-600 hover:bg-brand-700 text-white rounded-2xl font-black text-base shadow-lg transition-all flex items-center justify-center gap-2 cursor-pointer"
             >
               <span>🎉</span> Xem Chi Tiết Kết Quả Nộp Bài
             </button>

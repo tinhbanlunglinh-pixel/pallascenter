@@ -1,5 +1,5 @@
 /**
- * Content Validator & Pedagogical Quality Firewall (Mrs. Dung AI)
+ * Content Validator & Pedagogical Quality Firewall (Pallas AI)
  * 
  * Đảm bảo 100% tính chính xác sư phạm cho nội dung bài tập tiếng Anh:
  * 1. Đúng ngữ pháp, đúng từ vựng, đúng chính tả, đúng trình độ.
@@ -240,7 +240,7 @@ export const convertLegacyFillBlank = (legacy: {
 };
 
 // ============================================================================
-// 2. PEDAGOGICAL SANITIZATION & SINGLE-CHOICE GUARANTEE (MRS. DUNG FIREWALL)
+// 2. PEDAGOGICAL SANITIZATION & SINGLE-CHOICE GUARANTEE (PALLAS FIREWALL)
 // ============================================================================
 
 const SAFE_GRAMMATICAL_DISTRACTORS: Record<string, string[]> = {

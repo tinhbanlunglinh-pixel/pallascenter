@@ -237,16 +237,16 @@ ${link}
       )}
 
       {/* Header Banner Kho Tài Liệu */}
-      <div className="bg-gradient-to-r from-purple-700 via-indigo-700 to-brand-700 rounded-3xl p-6 sm:p-8 text-white shadow-xl relative overflow-hidden">
+      <div className="bg-gradient-to-r from-brand-900 via-brand-800 to-brand-700 rounded-3xl p-6 sm:p-8 text-white shadow-xl relative overflow-hidden">
         <div className="relative z-10 flex flex-col lg:flex-row lg:items-center justify-between gap-6">
           <div className="space-y-2">
             <div className="inline-flex items-center gap-2 px-3 py-1 bg-white/20 backdrop-blur-sm rounded-full text-xs font-black uppercase tracking-wider">
               <span>📚</span> KHO TÀI LIỆU & BÀI GIẢNG ĐÃ SOẠN
             </div>
             <h1 className="text-2xl sm:text-3xl lg:text-4xl font-black uppercase tracking-tight font-display">
-              NGÂN HÀNG BÀI TẬP MRS. DUNG
+              NGÂN HÀNG BÀI TẬP PALLAS
             </h1>
-            <p className="text-purple-100 text-sm sm:text-base font-medium max-w-2xl leading-relaxed">
+            <p className="text-brand-100 text-sm sm:text-base font-medium max-w-2xl leading-relaxed">
               Toàn bộ bài giảng đã soạn được lưu trữ ngăn nắp theo từng lớp và từng ngày. Cô có thể tìm kiếm, xem lại giáo án đầy đủ, giao lại hoặc nhanh chóng giao bài cho lớp khác chỉ với 1 click!
             </p>
           </div>
@@ -255,19 +255,19 @@ ${link}
           <div className="grid grid-cols-2 sm:grid-cols-4 gap-2.5 sm:gap-3 w-full lg:w-auto shrink-0">
             <div className="bg-white/15 backdrop-blur-md rounded-2xl p-3.5 text-center border border-white/20 shadow-inner">
               <p className="text-2xl sm:text-3xl font-black">{assignments.length}</p>
-              <p className="text-[10px] sm:text-xs text-purple-100 uppercase font-bold mt-0.5">Tài liệu đã soạn</p>
+              <p className="text-[10px] sm:text-xs text-brand-100 uppercase font-bold mt-0.5">Tài liệu đã soạn</p>
             </div>
             <div className="bg-white/15 backdrop-blur-md rounded-2xl p-3.5 text-center border border-white/20 shadow-inner">
               <p className="text-2xl sm:text-3xl font-black">{classes.length}</p>
-              <p className="text-[10px] sm:text-xs text-purple-100 uppercase font-bold mt-0.5">Lớp học phủ sóng</p>
+              <p className="text-[10px] sm:text-xs text-brand-100 uppercase font-bold mt-0.5">Lớp học phủ sóng</p>
             </div>
             <div className="bg-white/15 backdrop-blur-md rounded-2xl p-3.5 text-center border border-white/20 shadow-inner">
               <p className="text-2xl sm:text-3xl font-black">{totalQuestionsInRepo}</p>
-              <p className="text-[10px] sm:text-xs text-purple-100 uppercase font-bold mt-0.5">Câu hỏi bài tập</p>
+              <p className="text-[10px] sm:text-xs text-brand-100 uppercase font-bold mt-0.5">Câu hỏi bài tập</p>
             </div>
             <div className="bg-white/15 backdrop-blur-md rounded-2xl p-3.5 text-center border border-white/20 shadow-inner">
               <p className="text-2xl sm:text-3xl font-black">{submissions.length}</p>
-              <p className="text-[10px] sm:text-xs text-purple-100 uppercase font-bold mt-0.5">Lượt làm bài</p>
+              <p className="text-[10px] sm:text-xs text-brand-100 uppercase font-bold mt-0.5">Lượt làm bài</p>
             </div>
           </div>
         </div>
@@ -671,7 +671,7 @@ ${link}
             </span>
           </div>
 
-          {/* Lời dặn cô Dung (nếu có) */}
+          {/* Lời dặn cô Trang (nếu có) */}
           {assign.teacherNote && (
             <p className="text-[11px] text-slate-400 italic line-clamp-1 border-l-2 border-brand-300 pl-2">
               "{assign.teacherNote}"
@@ -1290,10 +1290,10 @@ export const LessonPreviewModal: React.FC<LessonPreviewModalProps> = ({
 
         {/* Nội dung bài học hoặc đề thi */}
         <div className="p-4 sm:p-6 overflow-y-auto space-y-6">
-          {/* Lời dặn cô Dung */}
+          {/* Lời dặn cô Trang */}
           {assignment.teacherNote && (
             <div className="bg-brand-50 border-l-4 border-brand-500 p-4 rounded-2xl">
-              <p className="text-xs font-black uppercase text-brand-800">💬 Lời Dặn Của Cô Dung:</p>
+              <p className="text-xs font-black uppercase text-brand-800">💬 Lời Dặn Của Cô Trang:</p>
               <p className="text-sm text-slate-700 italic mt-1">"{assignment.teacherNote}"</p>
             </div>
           )}

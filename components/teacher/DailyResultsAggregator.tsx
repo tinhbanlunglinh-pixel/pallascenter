@@ -352,7 +352,7 @@ export const DailyResultsAggregator: React.FC = () => {
   const handleCopyIndividualReminder = (item: StudentResultItem) => {
     const assignObj = assignments.find(a => a.id === selectedAssignmentId);
     const assignTitle = assignObj ? (assignObj.title || assignObj.topic) : 'Bài tập tiếng Anh';
-    let text = `Dạ cô Dung xin gửi lời chào đến phụ huynh em ${item.studentName}${item.englishName ? ` (${item.englishName})` : ''} ạ!\n`;
+    let text = `Dạ cô Trang (Trung Tâm Ngoại Ngữ Pallas) xin gửi lời chào đến phụ huynh em ${item.studentName}${item.englishName ? ` (${item.englishName})` : ''} ạ!\n`;
     text += `Hiện tại con chưa hoàn thành bài tập "${assignTitle}". Nhờ phụ huynh nhắc con mở app làm bài và nộp bài sớm giúp cô nhé! Cô cảm ơn phụ huynh nhiều ạ! ❤️`;
     navigator.clipboard.writeText(text);
     alert(`Đã copy tin nhắn nhắc nhở cho phụ huynh em ${item.studentName}!`);

@@ -223,7 +223,7 @@ export enum LoadingStep {
   IDLE = 'Idle',
   ANALYZING = 'Analyzing content...',
   GENERATING_IMAGE = 'Generating magic image...',
-  GENERATING_AUDIO = 'Creating Mrs. Dung\'s voice...',
+  GENERATING_AUDIO = 'Creating Ms. Trang\'s voice...',
   COMPLETED = 'Completed!'
 }
 
@@ -397,7 +397,7 @@ export interface Assignment {
   targetClassName: string;  // e.g. "Lớp 6A1" or "Tất cả các lớp" or "Lớp 6A1, Lớp 6A2"
   targetClassIds?: string[]; // Array of selected class IDs
   targetClassNames?: string[]; // Array of selected class names
-  teacherNote?: string;     // Lời dặn dò của cô Dung
+  teacherNote?: string;     // Lời dặn dò của cô Trang
   lessonPlan: LessonPlan;   // Nội dung chi tiết bài soạn (Từ vựng, Ngữ pháp, Bài đọc, Bài tập)
   assignmentType?: 'lesson' | 'exam'; // 'lesson' = Bài học thông thường, 'exam' = Đề thi giữ nguyên gốc
   examData?: PreservedExam; // Dữ liệu đề thi bảo toàn gốc khi assignmentType === 'exam'
@@ -500,7 +500,7 @@ export interface MonthlyReport {
   className: string;
   month: number;             // 1 - 12
   year: number;              // e.g. 2026
-  centerName: string;        // e.g. "ENGLISH MRS. DUNG"
+  centerName: string;        // e.g. "TRUNG TÂM NGOẠI NGỮ PALLAS"
   sessions: MonthlySessionConfig[];
   studentScores: StudentMonthlyScore[];
   updatedAt: string;
@@ -516,7 +516,7 @@ export interface StudentAnnualScore {
   completedMonthsCount: number;                // how many months have valid scores
   rank?: number;                               // rank in class
   classification: 'Xuất sắc' | 'Giỏi' | 'Khá' | 'Trung bình' | 'Cần cố gắng';
-  teacherRemarks?: string;                     // Lời phê tổng kết năm của Cô Dung
+  teacherRemarks?: string;                     // Lời phê tổng kết năm của Cô Trang
 }
 
 export interface AnnualReport {
@@ -524,7 +524,7 @@ export interface AnnualReport {
   classId: string;
   className: string;
   year: number;                                // e.g. 2026
-  centerName: string;                          // e.g. "ENGLISH MRS. DUNG"
+  centerName: string;                          // e.g. "TRUNG TÂM NGOẠI NGỮ PALLAS"
   studentScores: StudentAnnualScore[];
   generalNote?: string;                        // Nhận xét chung của lớp trong năm
   updatedAt: string;
@@ -556,7 +556,7 @@ export interface WeeklyReportRecord {
   month: number;             // 1 - 12
   weekNumber: number;        // 1 - 5
   weekLabel: string;         // e.g. "Tuần 1 (01/08 - 07/08)"
-  centerName: string;        // e.g. "ENGLISH MRS. DUNG"
+  centerName: string;        // e.g. "TRUNG TÂM NGOẠI NGỮ PALLAS"
   sessions: WeeklySessionConfig[];
   studentScores: StudentWeeklyScore[];
   updatedAt: string;

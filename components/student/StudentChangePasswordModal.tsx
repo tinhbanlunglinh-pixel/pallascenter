@@ -164,7 +164,7 @@ export const StudentChangePasswordModal: React.FC<StudentChangePasswordModalProp
             <div>
               <b>Mật khẩu ban đầu mặc định là 123.</b>
               <div className="text-[11px] text-amber-800 mt-0.5">
-                Để đổi mật khẩu riêng, con/phụ huynh vui lòng nhập chính xác <b>Số điện thoại</b> đã đăng ký với Cô Dung để hệ thống xác thực.
+                Để đổi mật khẩu riêng, con/phụ huynh vui lòng nhập chính xác <b>Số điện thoại</b> đã đăng ký với Cô Trang để hệ thống xác thực.
               </div>
             </div>
           </div>
@@ -253,7 +253,7 @@ export const StudentChangePasswordModal: React.FC<StudentChangePasswordModalProp
             <div>
               <label className="block text-xs font-bold text-slate-700 mb-1 flex items-center justify-between">
                 <span>3. Số điện thoại phụ huynh (Xác thực)</span>
-                <span className="text-[10px] text-slate-400 font-normal">Đã đăng ký với Cô Dung</span>
+                <span className="text-[10px] text-slate-400 font-normal">Đã đăng ký với Cô Trang</span>
               </label>
               <div className="relative">
                 <span className="absolute inset-y-0 left-0 pl-3 flex items-center text-slate-400 text-xs pointer-events-none">

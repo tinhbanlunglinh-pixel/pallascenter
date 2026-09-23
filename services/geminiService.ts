@@ -789,7 +789,7 @@ export const generateLessonPlan = async (
   const imageParts = images.map(data => ({ inlineData: { data, mimeType: 'image/jpeg' } }));
 
   // ==================== PHASE 1: GENERATE CORE LESSON ====================
-  const promptCore = `MRS. DUNG AI - MASTER ENGLISH PEDAGOGY ENGINE.
+  const promptCore = `PALLAS AI - MASTER ENGLISH PEDAGOGY ENGINE.
   TASK: Create a comprehensive core lesson. BE CONCISE, RIGOROUS, AND PEDAGOGICALLY SOUND. Output valid JSON only, no extra text.
   
   ===== 🌟 THE 20 PEDAGOGICAL PRINCIPLES (ZERO-TOLERANCE FOR ERRORS) =====
@@ -882,7 +882,7 @@ export const generateLessonPlan = async (
   // ==================== PHASE 2: GENERATE PRACTICE EXERCISES ====================
   if (onProgress) onProgress('practice');
 
-  const promptPractice = `MRS. DUNG AI - MASTER EXERCISE GENERATOR & PEDAGOGICAL AUDITOR.
+  const promptPractice = `PALLAS AI - MASTER EXERCISE GENERATOR & PEDAGOGICAL AUDITOR.
   TASK: Create practice exercises based directly on the provided LESSON CORE DATA. BE CONCISE, RIGOROUS, AND 100% PEDAGOGICALLY ACCURATE. Output valid JSON only.
 
   ===== ⚠️ MANDATORY JSON OUTPUT FORMAT ⚠️ =====
@@ -902,7 +902,7 @@ export const generateLessonPlan = async (
     }
   }
 
-  ===== 🚨 CRITICAL QUALITY PRINCIPLES (MRS. DUNG PEDAGOGICAL STANDARD) 🚨 =====
+  ===== 🚨 CRITICAL QUALITY PRINCIPLES (PALLAS PEDAGOGICAL STANDARD) 🚨 =====
   PRIORITY: ĐỘ CHÍNH XÁC > CHẤT LƯỢNG CÂU HỎI > ĐỘ PHÙ HỢP TRÌNH ĐỘ > TỐC ĐỘ.
 
   📌 1. CÂU HỎI TRẮC NGHIỆM (MULTIPLE CHOICE) — SINGLE CHOICE CHỈ 1 ĐÁP ÁN ĐÚNG (Principle 4):
@@ -1016,13 +1016,13 @@ export const generateLessonPlan = async (
     practice: completePractice
   };
 
-  // Pass through Mrs. Dung Pedagogical Quality Firewall
+  // Pass through Pallas Pedagogical Quality Firewall
   return validateAndSanitizeLessonPlan(rawLessonPlan);
 };
 
 export const analyzeImageAndCreateContent = async (images: string[], mimeType: string, char: CharacterProfile, mode: AppMode, customPrompt?: string, topic?: string, text?: string): Promise<ContentResult> => {
   const imageParts = images.map(data => ({ inlineData: { data, mimeType } }));
-  const prompt = `MRS. DUNG AI - PEDAGOGICALLY RIGOROUS CREATIVE STORYTELLER.
+  const prompt = `PALLAS AI - PEDAGOGICALLY RIGOROUS CREATIVE STORYTELLER.
   
   MANDATORY PEDAGOGICAL QUALITY RULES:
   - Language: 100% grammatically correct, natural British English, zero spelling mistakes.
@@ -1435,7 +1435,7 @@ export const extractExamFromDocument = async (
   const targetScale = options?.targetScale || 10;
   const duration = options?.durationMinutes || 45;
 
-  const promptExam = `MRS. DUNG AI - HIGH FIDELITY EXAM PRESERVATION ENGINE.
+  const promptExam = `PALLAS AI - HIGH FIDELITY EXAM PRESERVATION ENGINE.
 TASK: Extract and preserve 100% of the uploaded English Exam / Test into a structured format.
 
 🚨 CRITICAL MANDATE - ZERO DISTORTION / ABSOLUTE CONTENT FIDELITY 🚨
@@ -1719,7 +1719,7 @@ export interface RegenerateQuestionParams {
 export const regenerateQuestionWithAi = async (params: RegenerateQuestionParams): Promise<any> => {
   const { questionType, currentQuestion, teacherNote, context, onFallbackNotice } = params;
 
-  const prompt = `MRS. DUNG AI - MASTER ENGLISH QUESTION AUDITOR & REGENERATOR.
+  const prompt = `PALLAS AI - MASTER ENGLISH QUESTION AUDITOR & REGENERATOR.
 TASK: An English teacher is reviewing an exercise and detected an error or wants to fix/regenerate this single question.
 Review the CURRENT QUESTION and TEACHER INSTRUCTION carefully, diagnose any flaws (especially duplicate blank words, broken grammar, or awkward distractors), and regenerate a 100% pedagogically sound replacement question.
 
@@ -1737,7 +1737,7 @@ Reading Passage: ${context?.readingPassage || 'N/A'}
 TEACHER FEEDBACK / INSTRUCTION:
 ${teacherNote ? teacherNote : 'Tự động phát hiện và sửa triệt để các lỗi sai (lỗi lặp từ/thừa từ ở ô trống, sai ngữ pháp, phương án nhiễu sai lệch hoặc mơ hồ).'}
 
-===== 🚨 STRICT QUALITY PRINCIPLES (MRS. DUNG PEDAGOGICAL STANDARD) 🚨 =====
+===== 🚨 STRICT QUALITY PRINCIPLES (PALLAS PEDAGOGICAL STANDARD) 🚨 =====
 1. FIX BLANK DUPLICATION ERRORS:
    - If the question contains a blank '______', when the correct answer is inserted into the blank, the resulting sentence MUST be 100% natural, grammatically correct English with NO REPEATED OR REDUNDANT WORDS.
    - Example Error: Question has 'Children often pretend ______ to be superheroes.' and answer is 'to be'. Inserting answer produces 'pretend to be to be superheroes'!

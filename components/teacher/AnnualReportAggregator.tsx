@@ -241,7 +241,7 @@ export const AnnualReportAggregator: React.FC<AnnualReportAggregatorProps> = ({ 
       rowData['Điểm TB Cả Năm'] = std.annualAverage > 0 ? std.annualAverage : '';
       rowData['Xếp Loại Cả Năm'] = std.classification;
       rowData['Số Tháng Hoàn Thành'] = `${std.completedMonthsCount}/12`;
-      rowData['Lời Phê của Cô Dung'] = std.teacherRemarks || '';
+      rowData['Lời Phê của Cô Trang'] = std.teacherRemarks || '';
 
       return rowData;
     });
@@ -455,10 +455,10 @@ export const AnnualReportAggregator: React.FC<AnnualReportAggregatorProps> = ({ 
             <span>🎓</span> BÁO CÁO TỔNG KẾT KẾT QUẢ HỌC TẬP CẢ NĂM
           </div>
           <h2 className="text-2xl sm:text-3xl font-black text-brand-900 tracking-tight font-display">
-            {report?.centerName || 'ENGLISH MRS. DUNG'} - NĂM {selectedYear}
+            {report?.centerName || 'TRUNG TÂM NGOẠI NGỮ PALLAS'} - NĂM {selectedYear}
           </h2>
           <p className="text-sm font-bold text-slate-500 mt-1">
-            Lớp: <span className="text-emerald-700 font-black">{currentClass ? currentClass.name : '—'}</span> • Tổng hợp kết quả rèn luyện và tiến bộ của học sinh qua 12 tháng
+            Lớp: <span className="text-brand-700 font-black">{currentClass ? currentClass.name : '—'}</span> • Tổng hợp kết quả rèn luyện và tiến bộ của học sinh qua 12 tháng
           </p>
         </div>
 
@@ -530,7 +530,7 @@ export const AnnualReportAggregator: React.FC<AnnualReportAggregatorProps> = ({ 
                 </th>
                 <th className="py-3 px-2 border-r border-white/20 min-w-[95px]">XẾP LOẠI</th>
                 <th className="py-3 px-2 border-r border-white/20 min-w-[65px]">SỐ THÁNG</th>
-                <th className="py-3 px-3 text-left min-w-[220px]">LỜI PHÊ TỔNG KẾT NĂM CỦA CÔ DUNG</th>
+                <th className="py-3 px-3 text-left min-w-[220px]">LỜI PHÊ TỔNG KẾT NĂM CỦA CÔ TRANG</th>
               </tr>
             </thead>
             <tbody className="divide-y divide-slate-200">

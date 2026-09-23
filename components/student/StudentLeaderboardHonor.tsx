@@ -141,7 +141,7 @@ export const StudentLeaderboardHonor: React.FC<StudentLeaderboardHonorProps> = (
             Chưa có bài nộp đạt điểm cao ở {selectedClass === 'ALL' ? 'hệ thống' : selectedClass}
           </h4>
           <p className="text-xs text-amber-700 max-w-md mx-auto">
-            Các con hãy chăm chỉ đăng nhập, hoàn thành bài tập cô Dung giao để trở thành người đầu tiên xuất hiện trên Bảng Vàng nhé!
+            Các con hãy chăm chỉ đăng nhập, hoàn thành bài tập cô Trang giao để trở thành người đầu tiên xuất hiện trên Bảng Vàng nhé!
           </p>
         </div>
       ) : (
@@ -318,10 +318,10 @@ export const StudentLeaderboardHonor: React.FC<StudentLeaderboardHonorProps> = (
       )}
 
       {/* Encouragement Footer */}
-      <div className="p-3 bg-gradient-to-r from-brand-50 to-emerald-50 rounded-2xl border border-brand-100 flex items-center gap-2.5 text-xs text-brand-900 font-medium">
+      <div className="p-3 bg-gradient-to-r from-brand-50 to-highlight-50 rounded-2xl border border-brand-100 flex items-center gap-2.5 text-xs text-brand-900 font-medium">
         <span className="text-lg">💖</span>
         <span>
-          <b>Mrs. Dung nhắn nhủ:</b> <i>"Học tiếng Anh bằng cả trái tim — Chăm chỉ mỗi ngày, con nhất định sẽ tỏa sáng!"</i>
+          <b>Cô Trang nhắn nhủ:</b> <i>"Học tiếng Anh bằng cả trái tim — Chăm chỉ mỗi ngày, con nhất định sẽ tỏa sáng!"</i>
         </span>
       </div>
     </div>
