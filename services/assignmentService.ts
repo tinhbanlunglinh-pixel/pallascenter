@@ -1008,7 +1008,7 @@ export const PALLAS_TEST_ASSIGNMENT: Assignment = {
   lessonPlan: DEFAULT_SAMPLE_LESSON
 };
 
-const PALLAS_MIGRATION_KEY = 'pallas_force_clean_slate_v3';
+const PALLAS_MIGRATION_KEY = 'pallas_force_clean_slate_v4';
 
 export const initializePallasCleanData = async (force: boolean = false): Promise<void> => {
   if (typeof window === 'undefined') return;
@@ -1026,6 +1026,8 @@ export const initializePallasCleanData = async (force: boolean = false): Promise
   localStorage.setItem(ANNUAL_REPORTS_KEY, JSON.stringify([]));
   localStorage.setItem(CLASS_SCHEDULES_KEY, JSON.stringify([]));
   localStorage.setItem(ATTENDANCE_RECORDS_KEY, JSON.stringify([]));
+  localStorage.setItem(ADMIN_NOTIFICATIONS_KEY, JSON.stringify([]));
+  localStorage.setItem(NOTIFIED_SUBMISSIONS_KEY, JSON.stringify([]));
   localStorage.setItem(DATA_CLEANED_KEY, 'true');
   localStorage.setItem(PALLAS_MIGRATION_KEY, 'true');
 
@@ -1047,7 +1049,8 @@ export const initializePallasCleanData = async (force: boolean = false): Promise
       syncToFirebaseIfConfigured('weekly_reports', []),
       syncToFirebaseIfConfigured('annual_reports', []),
       syncToFirebaseIfConfigured('class_schedules', []),
-      syncToFirebaseIfConfigured('attendance_records', [])
+      syncToFirebaseIfConfigured('attendance_records', []),
+      syncToFirebaseIfConfigured('admin_notifications', [])
     ]);
   } catch (e) {
     console.warn('Firebase reset error:', e);
@@ -1740,7 +1743,51 @@ export const getAdminNotifications = (): AdminNotificationItem[] => {
     const raw = localStorage.getItem(ADMIN_NOTIFICATIONS_KEY);
     if (!raw) return [];
     const list = JSON.parse(raw);
-    return Array.isArray(list) ? list : [];
+    if (!Array.isArray(list)) return [];
+
+    // Chỉ giữ lại thông báo cho các bài nộp THỰC TẾ đang có trong hệ thống,
+    // loại bỏ triệt để mọi dữ liệu ảo, bài nộp mẫu sub_seed_, hoặc bài đã bị xóa
+    const submissions = getSubmissions();
+    const subMap = new Map<string, Submission>();
+    submissions.forEach(s => {
+      if (s && s.id && !isSubmissionInDeletedTombstone(s.id) && !String(s.id).startsWith('sub_seed_')) {
+        subMap.set(s.id, s);
+      }
+    });
+
+    const validNotifs: AdminNotificationItem[] = [];
+    list.forEach((n: any) => {
+      if (!n || !n.submissionId) return;
+      if (String(n.submissionId).startsWith('sub_seed_')) return;
+      const sub = subMap.get(n.submissionId);
+      if (sub) {
+        // Đồng bộ thời gian nộp bài chuẩn 100% theo giờ thực của bài nộp
+        const realSubmittedAt = sub.submittedAt || n.submittedAt || new Date().toISOString();
+        const realSubTime = new Date(realSubmittedAt).getTime();
+        validNotifs.push({
+          ...n,
+          studentName: sub.studentName || n.studentName,
+          studentClass: sub.studentClass || n.studentClass,
+          assignmentTitle: sub.assignmentTitle || sub.topic || n.assignmentTitle,
+          score: typeof sub.score === 'number' ? sub.score : n.score,
+          rawScore: sub.rawScore ?? n.rawScore,
+          isLate: sub.isLate ?? n.isLate,
+          totalCorrect: sub.totalCorrect ?? n.totalCorrect,
+          totalQuestions: sub.totalQuestions ?? n.totalQuestions,
+          submittedAt: realSubmittedAt,
+          createdAt: realSubTime
+        });
+      }
+    });
+
+    // Sắp xếp theo giờ nộp bài thực tế mới nhất lên đầu
+    validNotifs.sort((a, b) => {
+      const timeA = new Date(a.submittedAt || a.createdAt).getTime();
+      const timeB = new Date(b.submittedAt || b.createdAt).getTime();
+      return timeB - timeA;
+    });
+
+    return validNotifs;
   } catch {
     return [];
   }
@@ -1821,8 +1868,10 @@ export const testNotificationSound = (): void => {
   playNotificationSound(true);
 };
 
-export const addAdminNotification = (sub: Submission): void => {
+export const addAdminNotification = (sub: Submission, silent = false): void => {
   if (!sub || !sub.studentName || !sub.id) return;
+  if (isSubmissionInDeletedTombstone(sub.id) || String(sub.id).startsWith('sub_seed_')) return;
+
   // CHÍNH SÁCH QUAN TRỌNG: Thông báo bài nộp chỉ hiện 1 lần duy nhất trong vòng đời
   const notifiedSet = getNotifiedSubmissionIds();
   if (notifiedSet.has(sub.id)) return;
@@ -1831,8 +1880,11 @@ export const addAdminNotification = (sub: Submission): void => {
   const current = getAdminNotifications();
   if (current.some(n => n.submissionId === sub.id)) return;
 
+  const realSubmittedAt = sub.submittedAt || new Date().toISOString();
+  const realSubTime = new Date(realSubmittedAt).getTime();
+
   const notif: AdminNotificationItem = {
-    id: `notif_${Date.now()}_${Math.random().toString(36).substring(2, 5)}`,
+    id: `notif_${sub.id}`,
     submissionId: sub.id,
     studentName: sub.studentName,
     studentClass: sub.studentClass || '',
@@ -1842,18 +1894,20 @@ export const addAdminNotification = (sub: Submission): void => {
     isLate: sub.isLate,
     totalCorrect: sub.totalCorrect ?? 0,
     totalQuestions: sub.totalQuestions ?? 55,
-    submittedAt: sub.submittedAt || new Date().toISOString(),
+    submittedAt: realSubmittedAt,
     isRead: false,
-    createdAt: Date.now()
+    createdAt: realSubTime
   };
 
   const updated = [notif, ...current].slice(0, 100);
   saveAdminNotifications(updated);
-  notifySync('new_admin_notification', notif);
-  playNotificationSound();
+  if (!silent) {
+    notifySync('new_admin_notification', notif);
+    playNotificationSound();
+  }
 };
 
-export const addAdminNotificationsBatch = (subs: Submission[]): void => {
+export const addAdminNotificationsBatch = (subs: Submission[], silent = true): void => {
   if (!Array.isArray(subs) || subs.length === 0) return;
   const current = getAdminNotifications();
   const existingSubIds = new Set(current.map(n => n.submissionId));
@@ -1862,13 +1916,17 @@ export const addAdminNotificationsBatch = (subs: Submission[]): void => {
   const newNotifs: AdminNotificationItem[] = [];
   subs.forEach(sub => {
     if (!sub || !sub.studentName || !sub.id) return;
+    if (isSubmissionInDeletedTombstone(sub.id) || String(sub.id).startsWith('sub_seed_')) return;
     // Đảm bảo mỗi bài nộp chỉ thông báo 1 lần duy nhất
     if (notifiedSet.has(sub.id) || existingSubIds.has(sub.id)) return;
     markSubmissionAsNotified(sub.id);
     existingSubIds.add(sub.id);
 
+    const realSubmittedAt = sub.submittedAt || new Date().toISOString();
+    const realSubTime = new Date(realSubmittedAt).getTime();
+
     newNotifs.push({
-      id: `notif_${Date.now()}_${Math.random().toString(36).substring(2, 5)}`,
+      id: `notif_${sub.id}`,
       submissionId: sub.id,
       studentName: sub.studentName,
       studentClass: sub.studentClass || '',
@@ -1878,17 +1936,21 @@ export const addAdminNotificationsBatch = (subs: Submission[]): void => {
       isLate: sub.isLate,
       totalCorrect: sub.totalCorrect ?? 0,
       totalQuestions: sub.totalQuestions ?? 55,
-      submittedAt: sub.submittedAt || new Date().toISOString(),
+      submittedAt: realSubmittedAt,
       isRead: false,
-      createdAt: Date.now()
+      createdAt: realSubTime
     });
   });
 
   if (newNotifs.length > 0) {
     const updated = [...newNotifs, ...current].slice(0, 100);
     saveAdminNotifications(updated);
-    notifySync('new_admin_notification', newNotifs[0]);
-    playNotificationSound();
+    if (!silent) {
+      notifySync('new_admin_notification', newNotifs[0]);
+      playNotificationSound();
+    } else {
+      notifySync('admin_notifications_updated');
+    }
   }
 };
 
@@ -1917,7 +1979,7 @@ let lastReconcileTime = 0;
  * Tự động đối soát và bù đắp các thông báo bị thiếu cho giáo viên:
  * Quét các bài nộp gần đây (trong vòng 2 giờ).
  * CHỈ thông báo bài nào CHƯA TỪNG ĐƯỢC THÔNG BÁO (chỉ hiện 1 lần duy nhất).
- * Có cơ chế throttling (tối đa 1 lần / 60 giây) để tuyệt đối không làm đơ trình duyệt.
+ * Chạy ở chế độ silent=true để tuyệt đối không kêu chuông hay hiện toast ảo khi reload trang.
  */
 export const reconcileAdminNotifications = (isRealtime = false): void => {
   if (typeof window === 'undefined') return;
@@ -1939,7 +2001,7 @@ export const reconcileAdminNotifications = (isRealtime = false): void => {
     const TWO_HOURS_AGO = Date.now() - (2 * 60 * 60 * 1000);
     const missingSubs = submissions.filter(s => {
       if (!s || !s.id || !s.studentName || isSubmissionInDeletedTombstone(s.id)) return false;
-      if (s.id.startsWith('sub_seed_')) return false;
+      if (String(s.id).startsWith('sub_seed_')) return false;
       // Bỏ qua tuyệt đối nếu đã từng được thông báo
       if (alreadyNotifiedIds.has(s.id) || existingNotifSubIds.has(s.id)) return false;
       const subTime = s._subTime || new Date(s.submittedAt || s.createdAt || 0).getTime();
@@ -1947,7 +2009,7 @@ export const reconcileAdminNotifications = (isRealtime = false): void => {
     }).slice(0, 15);
 
     if (missingSubs.length > 0) {
-      addAdminNotificationsBatch(missingSubs);
+      addAdminNotificationsBatch(missingSubs, true);
     }
   } catch (err) {
     console.warn('Error in reconcileAdminNotifications:', err);

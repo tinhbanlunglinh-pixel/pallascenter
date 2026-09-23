@@ -182,7 +182,7 @@ export const syncSingleSubmissionToFirebase = async (submission: any, retryCount
             totalQuestions: submission.totalQuestions ?? 55,
             submittedAt: submission.submittedAt || new Date().toISOString(),
             isRead: false,
-            createdAt: Date.now()
+            createdAt: submission.submittedAt ? new Date(submission.submittedAt).getTime() : Date.now()
           })
         }).catch(() => {});
       } catch {}

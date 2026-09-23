@@ -12,6 +12,7 @@ import {
 import { getClasses, getStudents, subscribeToSync } from '../services/assignmentService';
 import { StudentLeaderboardHonor } from './student/StudentLeaderboardHonor';
 import { VisitCounter } from './VisitCounter';
+import { PallasContactBlock } from './PallasContactBlock';
 
 interface LoginScreenProps {
   onLoginSuccess: (user: AuthUser) => void;
@@ -224,27 +225,27 @@ export const LoginScreen: React.FC<LoginScreenProps> = ({ onLoginSuccess }) => {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-brand-900 via-brand-800 to-slate-900 flex flex-col justify-center items-center p-3 sm:p-6 lg:p-8 font-sans relative overflow-hidden">
+    <div className="min-h-screen bg-gradient-to-br from-[#2a050a] via-[#480b13] to-[#160205] flex flex-col justify-center items-center p-3 sm:p-6 lg:p-8 font-sans relative overflow-hidden">
       {/* Background Glow Decorations */}
-      <div className="absolute -top-40 -left-40 w-96 h-96 bg-brand-500/20 rounded-full blur-3xl pointer-events-none" />
-      <div className="absolute -bottom-40 -right-40 w-96 h-96 bg-emerald-500/20 rounded-full blur-3xl pointer-events-none" />
+      <div className="absolute -top-40 -left-40 w-96 h-96 bg-[#e5a93c]/15 rounded-full blur-3xl pointer-events-none" />
+      <div className="absolute -bottom-40 -right-40 w-96 h-96 bg-[#511314]/50 rounded-full blur-3xl pointer-events-none" />
 
       {/* Main Container: 2-column on desktop (Login Card + Honor Board Leaderboard), 1-column on mobile */}
       <div className="w-full max-w-6xl mx-auto grid grid-cols-1 lg:grid-cols-12 gap-6 sm:gap-8 items-start relative z-10 my-auto">
         {/* Left Column: Login Card (col-span-12 lg:col-span-5) */}
-        <div className="w-full lg:col-span-5 bg-white rounded-3xl shadow-2xl overflow-hidden border border-white/20 relative animate-fade-in">
+        <div className="w-full lg:col-span-5 bg-white rounded-3xl shadow-2xl overflow-hidden border border-[#7d4118]/40 relative animate-fade-in">
           {/* Top Header Card */}
-        <div className="bg-gradient-to-r from-brand-900 via-brand-800 to-brand-900 p-6 sm:p-8 text-center text-white relative border-b-4 border-amber-400">
-          <div className="w-18 h-18 sm:w-20 sm:h-20 mx-auto mb-3 bg-white rounded-2xl p-2 shadow-2xl flex items-center justify-center transform hover:rotate-3 transition-transform border-2 border-amber-300">
+        <div className="bg-[#480b13] p-6 sm:p-8 text-center text-white relative border-b-4 border-[#7d4118]">
+          <div className="w-18 h-18 sm:w-20 sm:h-20 mx-auto mb-3 bg-white rounded-2xl p-2 shadow-2xl flex items-center justify-center transform hover:rotate-3 transition-transform border-2 border-[#e5a93c]">
             <img src="https://i.postimg.cc/2S2xgbmX/logo.png" alt="Pallas Logo" className="w-full h-full object-contain rounded-full" crossOrigin="anonymous" />
           </div>
-          <h1 className="text-xl sm:text-2xl font-black tracking-tight uppercase font-display text-amber-300 drop-shadow-sm">
+          <h1 className="text-xl sm:text-2xl font-black tracking-tight uppercase font-display text-[#e5a93c] drop-shadow-sm">
             TRUNG TÂM NGOẠI NGỮ PALLAS
           </h1>
-          <p className="text-xs sm:text-sm text-brand-100 font-medium mt-1">
+          <p className="text-xs sm:text-sm text-amber-100/90 font-medium mt-1">
             Đồng hành cùng học sinh chinh phục tri thức
           </p>
-          <p className="text-[11px] text-amber-200/90 italic font-semibold mt-1">
+          <p className="text-[11px] text-[#e5a93c]/90 italic font-semibold mt-1">
             "Xây nền từ móng, chinh phục đỉnh cao"
           </p>
           <div className="mt-2.5 flex items-center justify-center">
@@ -252,7 +253,7 @@ export const LoginScreen: React.FC<LoginScreenProps> = ({ onLoginSuccess }) => {
               href="https://www.facebook.com/trang.phan.9461799"
               target="_blank"
               rel="noopener noreferrer"
-              className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-white/15 hover:bg-white/25 text-white text-xs font-bold transition-all border border-white/25 shadow-xs"
+              className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-[#511314] hover:bg-[#6b212f] text-white text-xs font-bold transition-all border border-[#7d4118]/60 shadow-xs"
             >
               <span>🌐</span>
               <span>Facebook Cô Trang</span>
@@ -273,8 +274,8 @@ export const LoginScreen: React.FC<LoginScreenProps> = ({ onLoginSuccess }) => {
                 onClick={() => handleRoleChange('student')}
                 className={`py-3 rounded-xl font-bold text-xs sm:text-sm flex items-center justify-center gap-2 transition-all ${
                   selectedRole === 'student'
-                    ? 'bg-white text-brand-700 shadow-md scale-102 ring-2 ring-brand-500/20'
-                    : 'text-slate-500 hover:text-slate-800'
+                    ? 'bg-[#480b13] text-[#e5a93c] shadow-md scale-102 ring-2 ring-[#7d4118]/50'
+                    : 'text-slate-600 hover:text-slate-900'
                 }`}
               >
                 <span className="text-base">🎒</span>
@@ -286,8 +287,8 @@ export const LoginScreen: React.FC<LoginScreenProps> = ({ onLoginSuccess }) => {
                 onClick={() => handleRoleChange('teacher')}
                 className={`py-3 rounded-xl font-bold text-xs sm:text-sm flex items-center justify-center gap-2 transition-all ${
                   selectedRole === 'teacher'
-                    ? 'bg-white text-brand-800 shadow-md scale-102 ring-2 ring-brand-600/20'
-                    : 'text-slate-500 hover:text-slate-800'
+                    ? 'bg-[#480b13] text-[#e5a93c] shadow-md scale-102 ring-2 ring-[#7d4118]/50'
+                    : 'text-slate-600 hover:text-slate-900'
                 }`}
               >
                 <span className="text-base">👩‍🏫</span>
@@ -519,8 +520,8 @@ export const LoginScreen: React.FC<LoginScreenProps> = ({ onLoginSuccess }) => {
               disabled={isLoading}
               className={`w-full py-3.5 rounded-2xl font-black text-sm text-white shadow-xl transition-all flex items-center justify-center gap-2 ${
                 selectedRole === 'teacher'
-                  ? 'bg-brand-600 hover:bg-brand-700 active:scale-98 shadow-brand-500/30'
-                  : 'bg-brand-600 hover:bg-brand-700 active:scale-98 shadow-brand-500/30'
+                  ? 'bg-gradient-to-r from-[#6b111c] via-[#8f1928] to-[#6b111c] hover:from-[#7d1522] hover:to-[#a31919] active:scale-98 shadow-brand-950/40 border border-[#e5a93c]/30'
+                  : 'bg-gradient-to-r from-[#6b111c] via-[#8f1928] to-[#6b111c] hover:from-[#7d1522] hover:to-[#a31919] active:scale-98 shadow-brand-950/40 border border-[#e5a93c]/30'
               } disabled:opacity-50`}
             >
               {isLoading ? (
@@ -557,6 +558,11 @@ export const LoginScreen: React.FC<LoginScreenProps> = ({ onLoginSuccess }) => {
           <VisitCounter compact={false} />
         </div>
       </div>
+    </div>
+
+    {/* Official Pallas Contact Card from Image */}
+    <div className="w-full max-w-6xl mx-auto mt-6 relative z-10 animate-fade-in">
+      <PallasContactBlock variant="card" />
     </div>
 
     {/* Modal: Customize Teacher Account & Password */}

@@ -11,6 +11,7 @@ import { SettingsModal } from './components/SettingsModal';
 import { LearningHistory } from './components/LearningHistory';
 import { VisitCounter } from './components/VisitCounter';
 import { AdminNotificationBell } from './components/teacher/AdminNotificationBell';
+import { PallasContactBlock } from './components/PallasContactBlock';
 
 export const PallasLogo = ({ className = "w-16 h-16", alt = "Trung Tâm Ngoại Ngữ Pallas" }: { className?: string; alt?: string; color?: string }) => (
   <div className={`relative ${className} flex items-center justify-center shrink-0`}>
@@ -89,15 +90,15 @@ function App() {
   return (
     <div className="min-h-screen bg-brand-50 flex flex-col font-serif text-slate-900">
       {/* Header */}
-      <header className="bg-brand-700 border-b-4 border-brand-800 sticky top-0 z-50 shadow-xl font-sans">
+      <header className="bg-[#480b13] border-b-2 border-[#7d4118] sticky top-0 z-50 shadow-xl font-sans">
         <div className="max-w-[1600px] mx-auto px-3 sm:px-6 h-16 sm:h-20 flex items-center justify-between gap-2">
           {/* Logo & Brand */}
           <div className="flex items-center gap-2 sm:gap-3.5">
-            <div className="w-10 h-10 sm:w-12 sm:h-12 bg-white rounded-xl sm:rounded-2xl p-1 shadow-lg flex items-center justify-center shrink-0 border border-amber-300/40">
+            <div className="w-10 h-10 sm:w-12 sm:h-12 bg-white rounded-xl sm:rounded-2xl p-1 shadow-lg flex items-center justify-center shrink-0 border border-[#e5a93c]/50">
               <PallasLogo className="w-full h-full" />
             </div>
             <div className="flex flex-col">
-              <h1 className="text-sm sm:text-lg md:text-xl font-black text-amber-300 uppercase tracking-tight font-display leading-tight drop-shadow-sm">
+              <h1 className="text-sm sm:text-lg md:text-xl font-black text-[#e5a93c] uppercase tracking-tight font-display leading-tight drop-shadow-sm">
                 TRUNG TÂM NGOẠI NGỮ PALLAS
               </h1>
               <span className="text-[8px] sm:text-[10px] font-black text-white/90 uppercase tracking-[0.08em] sm:tracking-[0.15em] hidden xs:block">
@@ -108,13 +109,13 @@ function App() {
 
           {/* Center: Role Switcher / Student Identity */}
           {currentUser.role === 'teacher' ? (
-            <div className="flex items-center bg-brand-950/80 p-1 rounded-2xl border border-white/10 shadow-inner">
+            <div className="flex items-center bg-[#32060d]/90 p-1 rounded-2xl border border-[#7d4118]/60 shadow-inner">
               <button
                 onClick={() => handleRoleChange('teacher')}
                 className={`px-3 sm:px-5 py-1.5 sm:py-2 rounded-xl font-black text-xs sm:text-sm flex items-center gap-1.5 transition-all ${
                   currentRole === 'teacher'
-                    ? 'bg-brand-600 text-white shadow-lg scale-102 ring-2 ring-white/30'
-                    : 'text-brand-100 hover:text-white hover:bg-white/10'
+                    ? 'bg-[#6b111c] text-white shadow-lg scale-102 ring-2 ring-[#e5a93c]/50'
+                    : 'text-amber-100/80 hover:text-white hover:bg-white/10'
                 }`}
               >
                 <span className="text-base">👩‍🏫</span>
@@ -125,8 +126,8 @@ function App() {
                 onClick={() => handleRoleChange('student')}
                 className={`px-3 sm:px-5 py-1.5 sm:py-2 rounded-xl font-black text-xs sm:text-sm flex items-center gap-1.5 transition-all ${
                   currentRole === 'student'
-                    ? 'bg-amber-500 text-white shadow-lg scale-102 ring-2 ring-white/30'
-                    : 'text-brand-100 hover:text-white hover:bg-white/10'
+                    ? 'bg-[#d98b1a] text-white shadow-lg scale-102 ring-2 ring-[#e5a93c]/50'
+                    : 'text-amber-100/80 hover:text-white hover:bg-white/10'
                 }`}
               >
                 <span className="text-base">🎒</span>
@@ -134,9 +135,9 @@ function App() {
               </button>
             </div>
           ) : (
-            <div className="flex items-center gap-2 bg-brand-900/90 px-3 sm:px-4 py-1.5 sm:py-2 rounded-2xl border border-amber-400/30 text-white shadow-inner">
+            <div className="flex items-center gap-2 bg-[#32060d]/90 px-3 sm:px-4 py-1.5 sm:py-2 rounded-2xl border border-[#7d4118]/60 text-white shadow-inner">
               <span className="text-base">{currentUser.avatar || '⭐'}</span>
-              <span className="text-xs sm:text-sm font-black tracking-wide">Học Sinh: {currentUser.name}</span>
+              <span className="text-xs sm:text-sm font-black tracking-wide text-[#e5a93c]">Học Sinh: {currentUser.name}</span>
               {currentUser.className && (
                 <span className="px-2 py-0.5 rounded-full bg-amber-500 text-white text-[10px] font-bold hidden sm:inline-block">
                   {currentUser.className}
@@ -247,17 +248,17 @@ function App() {
       {showHistory && (
         <LearningHistory onClose={() => setShowHistory(false)} />
       )}
-      {/* Footer with Pallas Branding from Image 1 */}
-      <footer className="bg-[#480b13] text-white border-t-4 border-[#610e1a] pt-14 pb-8 font-sans">
+      {/* Footer with Pallas Branding from Image */}
+      <footer className="bg-[#36060c] text-white border-t-4 border-[#7d4118] pt-14 pb-8 font-sans">
         <div className="max-w-[1500px] mx-auto px-4 sm:px-6">
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 items-start mb-10">
             {/* Column 1: Brand Info */}
             <div className="space-y-4 flex flex-col items-center md:items-start text-center md:text-left">
-              <div className="bg-white p-2.5 rounded-2xl w-24 h-24 shadow-2xl border-2 border-amber-300 flex items-center justify-center">
+              <div className="bg-white p-2.5 rounded-2xl w-24 h-24 shadow-2xl border-2 border-[#e5a93c] flex items-center justify-center">
                 <PallasLogo className="w-full h-full" />
               </div>
               <div>
-                <h3 className="font-black text-xl sm:text-2xl text-amber-400 uppercase tracking-tight font-display leading-tight">
+                <h3 className="font-black text-xl sm:text-2xl text-[#e5a93c] uppercase tracking-tight font-display leading-tight">
                   TRUNG TÂM NGOẠI NGỮ PALLAS
                 </h3>
                 <p className="text-white/90 font-bold text-xs uppercase tracking-wider mt-1.5">
@@ -269,56 +270,16 @@ function App() {
               </div>
             </div>
 
-            {/* Column 2: Liên Hệ */}
-            <div className="space-y-3.5 text-left text-sm font-semibold">
-              <h4 className="font-black text-amber-400 text-lg uppercase tracking-wider border-b border-amber-400/30 pb-2">
-                LIÊN HỆ
-              </h4>
-              <div className="space-y-3 pt-1">
-                <div className="flex items-start gap-3">
-                  <span className="p-2 rounded-xl bg-amber-400/15 text-amber-400 shrink-0 text-base">📍</span>
-                  <div>
-                    <p className="text-xs font-bold text-amber-300 uppercase">Cơ sở 1</p>
-                    <p className="text-sm font-medium text-white/95">SN 31 ngõ 77 Nguyễn Trãi, Phường Kinh Môn, TP Hải Phòng</p>
-                  </div>
-                </div>
-
-                <div className="flex items-start gap-3">
-                  <span className="p-2 rounded-xl bg-amber-400/15 text-amber-400 shrink-0 text-base">📍</span>
-                  <div>
-                    <p className="text-xs font-bold text-amber-300 uppercase">Cơ sở 2</p>
-                    <p className="text-sm font-medium text-white/95">SN 347 Đường Vũ Mạnh Hùng, Phường Nhị Chiểu, TP Hải Phòng</p>
-                  </div>
-                </div>
-
-                <div className="flex items-center gap-3">
-                  <span className="p-2 rounded-xl bg-amber-400/15 text-amber-400 shrink-0 text-base">📞</span>
-                  <a href="tel:0979222210" className="text-sm font-bold text-white hover:text-amber-300 transition-colors">
-                    Hotline: <span className="text-amber-300 font-black">0979.2222.10</span>
-                  </a>
-                </div>
-
-                <div className="flex items-center gap-3">
-                  <span className="p-2 rounded-xl bg-amber-400/15 text-amber-400 shrink-0 text-base">🌐</span>
-                  <a
-                    href="https://www.facebook.com/trang.phan.9461799"
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="text-sm font-bold text-white hover:text-amber-300 transition-colors underline decoration-amber-400/50 hover:decoration-amber-300"
-                  >
-                    Fanpage: Trung Tâm Ngoại Ngữ Pallas
-                  </a>
-                </div>
-              </div>
-            </div>
+            {/* Column 2: Liên Hệ (From Official Pallas Contact Card) */}
+            <PallasContactBlock variant="flat" />
 
             {/* Column 3: Sứ Mệnh */}
             <div className="space-y-3.5 text-left md:col-span-2 lg:col-span-1">
-              <h4 className="font-black text-amber-400 text-lg uppercase tracking-wider border-b border-amber-400/30 pb-2">
+              <h4 className="font-black text-[#e5a93c] text-lg uppercase tracking-wider border-b border-[#7d4118]/80 pb-2">
                 SỨ MỆNH
               </h4>
-              <div className="bg-[#38070d]/90 border border-white/10 rounded-2xl p-5 shadow-2xl space-y-3">
-                <p className="text-amber-300 font-black text-base italic leading-snug">
+              <div className="bg-[#480b13]/90 border border-[#6b212f] rounded-2xl p-5 shadow-2xl space-y-3">
+                <p className="text-[#e5a93c] font-black text-base italic leading-snug">
                   "Xây nền từ móng, chinh phục đỉnh cao"
                 </p>
                 <p className="text-xs sm:text-sm text-white/90 leading-relaxed font-normal">
@@ -328,7 +289,7 @@ function App() {
                   <div className="w-6 h-6 rounded-full bg-white p-0.5 shrink-0 shadow-sm">
                     <PallasLogo className="w-full h-full" />
                   </div>
-                  <span className="text-[11px] font-black text-amber-400 tracking-wide uppercase">
+                  <span className="text-[11px] font-black text-[#e5a93c] tracking-wide uppercase">
                     TRUNG TÂM NGOẠI NGỮ PALLAS
                   </span>
                 </div>

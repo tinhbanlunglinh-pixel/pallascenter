@@ -71,7 +71,7 @@ export const AdminNotificationBell: React.FC<AdminNotificationBellProps> = ({ on
               totalQuestions: raw.totalQuestions ?? 55,
               submittedAt: raw.submittedAt || new Date().toISOString(),
               isRead: false,
-              createdAt: Date.now()
+              createdAt: raw.submittedAt ? new Date(raw.submittedAt).getTime() : Date.now()
             };
             showToastOnce(subId, toastItem);
           }
@@ -129,14 +129,34 @@ export const AdminNotificationBell: React.FC<AdminNotificationBellProps> = ({ on
     testNotificationSound();
   };
 
-  const formatTimeAgo = (timestamp?: number, isoDate?: string) => {
-    const time = timestamp || (isoDate ? new Date(isoDate).getTime() : 0);
-    if (!time) return 'Vừa xong';
+  const formatExactSubmissionTime = (submittedAt?: string, createdAt?: number) => {
+    const raw = submittedAt || (createdAt ? new Date(createdAt).toISOString() : '');
+    if (!raw) return '—';
+    const d = new Date(raw);
+    if (isNaN(d.getTime())) return '—';
+
+    const hours = String(d.getHours()).padStart(2, '0');
+    const minutes = String(d.getMinutes()).padStart(2, '0');
+    const seconds = String(d.getSeconds()).padStart(2, '0');
+    const day = String(d.getDate()).padStart(2, '0');
+    const month = String(d.getMonth() + 1).padStart(2, '0');
+    const year = d.getFullYear();
+
+    return `${hours}:${minutes}:${seconds} • ${day}/${month}/${year}`;
+  };
+
+  const formatTimeAgo = (submittedAt?: string, createdAt?: number) => {
+    const raw = submittedAt || (createdAt ? new Date(createdAt).toISOString() : '');
+    if (!raw) return '';
+    const d = new Date(raw);
+    const time = d.getTime();
+    if (isNaN(time) || time <= 0) return '';
     const diff = Math.floor((Date.now() - time) / 1000);
-    if (diff < 60) return 'Vừa xong';
+    if (diff < 15) return 'Vừa mới nộp';
+    if (diff < 60) return `${diff} giây trước`;
     if (diff < 3600) return `${Math.floor(diff / 60)} phút trước`;
     if (diff < 86400) return `${Math.floor(diff / 3600)} giờ trước`;
-    return new Date(time).toLocaleDateString('vi-VN', { day: '2-digit', month: '2-digit', hour: '2-digit', minute: '2-digit' });
+    return `${Math.floor(diff / 86400)} ngày trước`;
   };
 
   return (
@@ -164,22 +184,25 @@ export const AdminNotificationBell: React.FC<AdminNotificationBellProps> = ({ on
 
       {/* Floating Toast Notification on new submission */}
       {activeToast && (
-        <div className="fixed top-20 right-4 z-50 max-w-sm w-full bg-white rounded-2xl shadow-2xl border-2 border-emerald-400 p-4 animate-slide-in text-slate-800">
+        <div className="fixed top-20 right-4 z-50 max-w-sm w-full bg-white rounded-2xl shadow-2xl border-2 border-brand-500 p-4 animate-slide-in text-slate-800">
           <div className="flex items-start justify-between gap-2">
-            <div className="flex items-center gap-2">
+            <div className="flex items-center gap-2.5">
               <span className="text-2xl animate-pulse">🎉</span>
               <div>
-                <h4 className="font-black text-xs uppercase tracking-wider text-emerald-700">
+                <h4 className="font-black text-xs uppercase tracking-wider text-brand-700">
                   Học Sinh Vừa Nộp Bài!
                 </h4>
-                <p className="text-xs text-slate-400">
-                  {formatTimeAgo(activeToast.createdAt, activeToast.submittedAt)}
+                <p className="text-[11px] font-bold text-slate-700 mt-0.5">
+                  ⏰ {formatExactSubmissionTime(activeToast.submittedAt, activeToast.createdAt)}
+                </p>
+                <p className="text-[10px] text-brand-600 font-semibold">
+                  {formatTimeAgo(activeToast.submittedAt, activeToast.createdAt)}
                 </p>
               </div>
             </div>
             <button
               onClick={() => setActiveToast(null)}
-              className="w-6 h-6 rounded-full hover:bg-slate-100 text-slate-400 hover:text-slate-600 font-bold text-xs flex items-center justify-center"
+              className="w-6 h-6 rounded-full hover:bg-slate-100 text-slate-400 hover:text-slate-600 font-bold text-xs flex items-center justify-center cursor-pointer"
             >
               ✕
             </button>
@@ -196,7 +219,7 @@ export const AdminNotificationBell: React.FC<AdminNotificationBellProps> = ({ on
               <span className={`font-black px-2 py-0.5 rounded-lg border flex items-center gap-1.5 ${
                 activeToast.isLate
                   ? 'text-amber-800 bg-amber-50 border-amber-300'
-                  : 'text-emerald-600 bg-emerald-50 border-emerald-200'
+                  : 'text-brand-700 bg-brand-50 border-brand-200'
               }`}>
                 <span>⭐ {activeToast.score.toFixed(1)}/10 điểm ({activeToast.totalCorrect}/{activeToast.totalQuestions} câu)</span>
                 {activeToast.isLate && (
@@ -223,7 +246,7 @@ export const AdminNotificationBell: React.FC<AdminNotificationBellProps> = ({ on
       {isOpen && (
         <div className="absolute right-0 mt-2 w-80 sm:w-96 bg-white rounded-2xl shadow-2xl border-2 border-brand-200 z-50 overflow-hidden animate-scale-up text-slate-800">
           {/* Header */}
-          <div className="bg-gradient-to-r from-brand-700 to-emerald-700 p-3.5 text-white flex items-center justify-between">
+          <div className="bg-gradient-to-r from-brand-900 via-brand-800 to-brand-700 p-3.5 text-white flex items-center justify-between">
             <div className="flex items-center gap-2">
               <span className="text-lg">{isMuted ? '🔕' : '🔔'}</span>
               <span className="font-black text-sm uppercase tracking-wide">
@@ -251,7 +274,7 @@ export const AdminNotificationBell: React.FC<AdminNotificationBellProps> = ({ on
                 className={`px-2.5 py-1 rounded-lg font-black text-xs flex items-center gap-1.5 transition-all cursor-pointer shadow-xs ${
                   isMuted
                     ? 'bg-rose-100 text-rose-700 hover:bg-rose-200 border border-rose-300'
-                    : 'bg-emerald-100 text-emerald-800 hover:bg-emerald-200 border border-emerald-300'
+                    : 'bg-brand-50 text-brand-800 hover:bg-brand-100 border border-brand-300'
                 }`}
                 title={isMuted ? "Bấm để BẬT âm thanh chuông khi có bài nộp" : "Bấm để TẮT chuông nếu không muốn kêu"}
               >
@@ -272,7 +295,6 @@ export const AdminNotificationBell: React.FC<AdminNotificationBellProps> = ({ on
             </button>
           </div>
 
-
           {/* List */}
           <div className="max-h-[380px] overflow-y-auto divide-y divide-slate-100">
             {notifications.length === 0 ? (
@@ -280,7 +302,7 @@ export const AdminNotificationBell: React.FC<AdminNotificationBellProps> = ({ on
                 <span className="text-4xl block">📭</span>
                 <p className="text-xs font-semibold">Chưa có thông báo bài nộp mới nào</p>
                 <p className="text-[10px] text-slate-400">
-                  Khi học sinh nộp bài, thông báo thời gian thực sẽ hiển thị tại đây!
+                  Khi học sinh nộp bài, thông báo theo giờ thực tế sẽ hiển thị tại đây!
                 </p>
               </div>
             ) : (
@@ -292,32 +314,37 @@ export const AdminNotificationBell: React.FC<AdminNotificationBellProps> = ({ on
                     setIsOpen(false);
                   }}
                   className={`p-3 hover:bg-brand-50/70 transition-all cursor-pointer flex items-start gap-2.5 ${
-                    !item.isRead ? 'bg-emerald-50/40 border-l-4 border-l-emerald-500' : ''
+                    !item.isRead ? 'bg-brand-50/50 border-l-4 border-l-brand-600' : ''
                   }`}
                 >
-                  <div className="w-8 h-8 rounded-full bg-brand-100 text-brand-700 flex items-center justify-center font-black text-sm shrink-0">
+                  <div className="w-8 h-8 rounded-full bg-brand-100 text-brand-700 flex items-center justify-center font-black text-sm shrink-0 mt-0.5">
                     {item.score >= 8 ? '🌟' : item.score >= 5 ? '👍' : '📝'}
                   </div>
 
                   <div className="flex-1 min-w-0">
-                    <div className="flex items-center justify-between gap-1">
+                    <div className="flex items-start justify-between gap-1.5">
                       <p className="font-black text-xs text-slate-900 truncate">
                         {item.studentName} {item.studentClass ? `(${item.studentClass})` : ''}
                       </p>
-                      <span className="text-[10px] text-slate-400 shrink-0">
-                        {formatTimeAgo(item.createdAt, item.submittedAt)}
-                      </span>
+                      <div className="text-right shrink-0">
+                        <span className="text-[10px] font-black text-brand-700 block">
+                          ⏰ {formatExactSubmissionTime(item.submittedAt, item.createdAt)}
+                        </span>
+                        <span className="text-[9px] text-slate-400 font-semibold block">
+                          {formatTimeAgo(item.submittedAt, item.createdAt)}
+                        </span>
+                      </div>
                     </div>
 
                     <p className="text-[11px] text-slate-600 truncate mt-0.5" title={item.assignmentTitle}>
-                      {item.assignmentTitle}
+                      📝 {item.assignmentTitle}
                     </p>
 
                     <div className="flex items-center gap-1.5 mt-1 flex-wrap">
                       <span className={`text-[10px] font-black px-1.5 py-0.5 rounded ${
                         item.isLate
                           ? 'text-amber-800 bg-amber-100 border border-amber-300'
-                          : 'text-emerald-700 bg-emerald-100'
+                          : 'text-brand-700 bg-brand-50 border border-brand-200'
                       }`}>
                         {item.score.toFixed(1)}/10 điểm
                       </span>

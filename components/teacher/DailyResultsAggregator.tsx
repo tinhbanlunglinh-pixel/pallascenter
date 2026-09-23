@@ -860,10 +860,11 @@ export const DailyResultsAggregator: React.FC = () => {
                           </span>
                         )}
                       </td>
-                      <td className="py-3.5 px-3 text-xs text-slate-500">
+                      <td className="py-3.5 px-3 text-xs text-slate-500 font-medium">
                         {s ? (
                           <>
-                            {new Date(s.submittedAt).toLocaleTimeString('vi-VN', { hour: '2-digit', minute: '2-digit' })} • {new Date(s.submittedAt).toLocaleDateString('vi-VN')}
+                            <span className="font-bold text-slate-700">{new Date(s.submittedAt).toLocaleTimeString('vi-VN', { hour: '2-digit', minute: '2-digit', second: '2-digit' })}</span>
+                            <span className="text-slate-400 block text-[11px]">{new Date(s.submittedAt).toLocaleDateString('vi-VN')}</span>
                           </>
                         ) : (
                           <span className="text-slate-300">—</span>
@@ -957,6 +958,9 @@ export const DailyResultsAggregator: React.FC = () => {
               <div>
                 <h3 className="text-lg font-black text-brand-900">Chi Tiết Bài Nộp: {viewDetailSubmission.studentName}</h3>
                 <p className="text-xs text-slate-500 font-bold">{viewDetailSubmission.studentClass} • {viewDetailSubmission.assignmentTitle || viewDetailSubmission.topic}</p>
+                <p className="text-xs text-brand-700 font-bold mt-0.5">
+                  ⏰ Giờ nộp thực tế: {new Date(viewDetailSubmission.submittedAt).toLocaleTimeString('vi-VN', { hour: '2-digit', minute: '2-digit', second: '2-digit' })} • {new Date(viewDetailSubmission.submittedAt).toLocaleDateString('vi-VN')}
+                </p>
               </div>
               <button onClick={() => { setViewDetailSubmission(null); setSelectedDetailItem(null); }} className="text-slate-400 hover:text-slate-600 font-bold text-lg">✕</button>
             </div>

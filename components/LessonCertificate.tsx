@@ -150,10 +150,11 @@ export const LessonCertificate: React.FC<LessonCertificateProps> = ({
 
             {/* Footer */}
             <div className="w-full flex justify-between items-end px-4">
-              <div className="text-left">
-                <p className="text-xs text-slate-400">Ngày cấp: {fullDateStr}</p>
-                <p className="text-[11px] text-slate-400 mt-0.5">Hotline: 0979.2222.10</p>
-                <p className="text-xs font-bold text-brand-700 mt-1">Đồng hành cùng học sinh chinh phục tri thức 🌟</p>
+              <div className="text-left text-[11px] text-slate-500 leading-tight">
+                <p className="text-xs text-slate-400 font-medium">Ngày cấp: {fullDateStr}</p>
+                <p className="mt-0.5"><span className="font-bold text-amber-700">CS1:</span> SN 31 ngõ 77 Nguyễn Trãi, Kinh Môn, HP</p>
+                <p><span className="font-bold text-amber-700">CS2:</span> SN 347 Vũ Mạnh Hùng, Nhị Chiểu, HP</p>
+                <p className="text-xs font-bold text-brand-700 mt-1">Hotline: 0979.2222.10 • Pallas English 🌟</p>
               </div>
               <div className="text-right">
                 <div className="w-28 h-0.5 bg-slate-800 mb-2 ml-auto"></div>

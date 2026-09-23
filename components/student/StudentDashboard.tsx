@@ -287,16 +287,16 @@ export const StudentDashboard: React.FC = () => {
   return (
     <div className="space-y-6 font-sans">
       {/* Top Banner */}
-      <div className="bg-gradient-to-r from-brand-900 via-brand-800 to-brand-700 rounded-3xl p-6 sm:p-8 text-white shadow-xl relative overflow-hidden">
+      <div className="bg-gradient-to-r from-[#480b13] via-[#5c0d18] to-[#480b13] border-2 border-[#7d4118]/60 rounded-3xl p-6 sm:p-8 text-white shadow-xl relative overflow-hidden">
         <div className="relative z-10 flex flex-col md:flex-row items-start md:items-center justify-between gap-4">
           <div>
-            <div className="inline-flex items-center gap-2 px-3 py-1 bg-white/20 rounded-full text-xs font-bold uppercase tracking-wider mb-2">
+            <div className="inline-flex items-center gap-2 px-3 py-1 bg-[#511314] border border-[#6b212f] rounded-full text-xs font-bold uppercase tracking-wider mb-2 text-[#e5a93c]">
               <span>🎒</span> GÓC HỌC TẬP HỌC SINH
             </div>
-            <h1 className="text-2xl sm:text-4xl font-black uppercase tracking-tight font-display">
+            <h1 className="text-2xl sm:text-4xl font-black uppercase tracking-tight font-display text-[#e5a93c]">
               CHÀO MỪNG CON ĐẾN VỚI TRUNG TÂM PALLAS!
             </h1>
-            <p className="text-brand-100 text-sm sm:text-base font-medium mt-1">
+            <p className="text-amber-100/90 text-sm sm:text-base font-medium mt-1">
               Xem danh sách bài tập cô giao theo ngày, hoàn thành bài tập và nhận ngay chứng nhận điểm cao nhé!
             </p>
           </div>
