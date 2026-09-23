@@ -1,0 +1,8 @@
+{
+  "name": "TRUNG TÂM NGOẠI NGỮ PALLAS",
+  "description": "Đồng hành cùng học sinh chinh phục tri thức - Xây nền từ móng, chinh phục đỉnh cao. Hệ thống AI hỗ trợ giảng dạy và học tập Tiếng Anh chất lượng cao.",
+  "requestFramePermissions": [
+    "microphone",
+    "camera"
+  ]
+}
