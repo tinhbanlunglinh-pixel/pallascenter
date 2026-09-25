@@ -1247,9 +1247,13 @@ export const MonthlyReportAggregator: React.FC<MonthlyReportAggregatorProps> = (
               onChange={e => handleClassChange(e.target.value)}
               className="px-3.5 py-2.5 rounded-xl border border-slate-200 text-sm font-bold bg-white text-slate-800 focus:border-brand-500 outline-none shadow-sm cursor-pointer"
             >
-              {classes.map(c => (
-                <option key={c.id} value={c.id}>{c.name}</option>
-              ))}
+              {classes.length === 0 ? (
+                <option value="">-- Chưa có lớp học --</option>
+              ) : (
+                classes.map(c => (
+                  <option key={c.id} value={c.id}>{c.name}</option>
+                ))
+              )}
             </select>
           </div>
 

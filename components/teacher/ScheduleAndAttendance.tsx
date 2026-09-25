@@ -416,11 +416,15 @@ export const ScheduleAndAttendance: React.FC = () => {
               onChange={e => setSelectedClassId(e.target.value)}
               className="bg-white text-slate-900 font-black text-sm px-3 py-2 rounded-xl outline-none shadow-sm cursor-pointer"
             >
-              {classes.map(c => (
-                <option key={c.id} value={c.id}>
-                  {c.name} ({c.studentCount || 0} HS)
-                </option>
-              ))}
+              {classes.length === 0 ? (
+                <option value="">-- Chưa có lớp học --</option>
+              ) : (
+                classes.map(c => (
+                  <option key={c.id} value={c.id}>
+                    {c.name} ({c.studentCount || 0} HS)
+                  </option>
+                ))
+              )}
             </select>
           </div>
         </div>

@@ -67,6 +67,8 @@ export const LoginScreen: React.FC<LoginScreenProps> = ({ onLoginSuccess }) => {
           if (prev && cls.some(c => c.name === prev)) return prev;
           return cls[0].name;
         });
+      } else {
+        setStudentClassName('');
       }
 
       if (urlStudent) {
@@ -316,7 +318,7 @@ export const LoginScreen: React.FC<LoginScreenProps> = ({ onLoginSuccess }) => {
                       className="w-full pl-10 pr-4 py-3 rounded-xl border border-slate-200 focus:border-brand-500 focus:ring-4 focus:ring-brand-500/10 outline-none text-sm font-bold bg-white text-slate-800 cursor-pointer"
                     >
                       {classes.length === 0 ? (
-                        <option value="">-- Đang đồng bộ danh sách lớp... --</option>
+                        <option value="">-- Chưa có lớp học (Giáo viên vui lòng tạo lớp trước) --</option>
                       ) : (
                         classes.map(c => (
                           <option key={c.id} value={c.name}>

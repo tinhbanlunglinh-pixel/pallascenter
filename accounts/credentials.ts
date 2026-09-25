@@ -32,19 +32,6 @@ export const INITIAL_ACCOUNTS: AccountCredential[] = [
     role: 'teacher',
     name: 'Cô Trang (Ms. Trang)',
     avatar: '👩‍🏫'
-  },
-
-  // ─────────────────────────────────────────────────────────────────────────────
-  // 🎒 2. TÀI KHOẢN HỌC SINH (STUDENT)
-  // ─────────────────────────────────────────────────────────────────────────────
-  {
-    id: 'student_pallas_test',
-    username: 'hocsinh',       // 👈 Tên đăng nhập chung cho Học sinh
-    password: '123',           // 👈 Mật khẩu Học sinh
-    role: 'student',
-    name: 'Học Sinh Pallas',
-    avatar: '⭐',
-    classId: 'class_pallas_star',
-    className: 'Lớp Pallas Star'
   }
 ];
+

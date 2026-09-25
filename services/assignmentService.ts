@@ -183,8 +183,8 @@ export const clearAllDemoData = async (): Promise<void> => {
   await initializePallasCleanData(true);
 };
 
-const MOCK_CLASS_IDS = new Set(['class_6a1', 'class_6a2', 'class_7b1', 'class_8a1']);
-const MOCK_STUDENT_IDS = new Set(Array.from({ length: 17 }, (_, i) => `std_${i + 1}`));
+const MOCK_CLASS_IDS = new Set(['class_6a1', 'class_6a2', 'class_7b1', 'class_8a1', 'class_pallas_star']);
+const MOCK_STUDENT_IDS = new Set(['std_pallas_01', ...Array.from({ length: 17 }, (_, i) => `std_${i + 1}`)]);
 
 // ==================== CLASS MANAGEMENT ====================
 export const getClasses = (): ClassRoom[] => {
@@ -199,15 +199,12 @@ export const getClasses = (): ClassRoom[] => {
           result = parsed.filter(c => c && c.id && !MOCK_CLASS_IDS.has(c.id));
         }
       }
-      if (result.length === 0) {
-        result = [PALLAS_TEST_CLASS];
-      }
       cachedClassesRaw = raw;
       cachedClassesClean = result;
     }
-    return cachedClassesClean && cachedClassesClean.length > 0 ? cachedClassesClean : [PALLAS_TEST_CLASS];
+    return cachedClassesClean || [];
   } catch {
-    return [PALLAS_TEST_CLASS];
+    return [];
   }
 };
 
@@ -605,6 +602,7 @@ export const getStudents = (classIdOrName?: string): Student[] => {
       for (const s of all) {
         if (!s || !s.id) continue;
         if (deletedIds.has(s.id)) continue; // Tuyệt đối không nạp học sinh đã xóa
+        if (MOCK_STUDENT_IDS.has(s.id) || (s.classId && MOCK_CLASS_IDS.has(s.classId))) continue;
         if (!seenIds.has(s.id)) {
           seenIds.add(s.id);
           deduped.push({
@@ -612,10 +610,6 @@ export const getStudents = (classIdOrName?: string): Student[] => {
             password: (s.password && s.password.trim().length > 0) ? s.password.trim() : '123'
           });
         }
-      }
-
-      if (deduped.length === 0) {
-        deduped.push(PALLAS_TEST_STUDENT);
       }
 
       cachedStudentsRaw = raw;
@@ -1008,7 +1002,7 @@ export const PALLAS_TEST_ASSIGNMENT: Assignment = {
   lessonPlan: DEFAULT_SAMPLE_LESSON
 };
 
-const PALLAS_MIGRATION_KEY = 'pallas_force_clean_slate_v4';
+const PALLAS_MIGRATION_KEY = 'pallas_pure_real_data_v6';
 
 export const initializePallasCleanData = async (force: boolean = false): Promise<void> => {
   if (typeof window === 'undefined') return;
@@ -1016,9 +1010,9 @@ export const initializePallasCleanData = async (force: boolean = false): Promise
     return;
   }
 
-  localStorage.setItem(CLASSES_KEY, JSON.stringify([PALLAS_TEST_CLASS]));
-  localStorage.setItem(STUDENTS_KEY, JSON.stringify([PALLAS_TEST_STUDENT]));
-  localStorage.setItem(ASSIGNMENTS_KEY, JSON.stringify([PALLAS_TEST_ASSIGNMENT]));
+  localStorage.setItem(CLASSES_KEY, JSON.stringify([]));
+  localStorage.setItem(STUDENTS_KEY, JSON.stringify([]));
+  localStorage.setItem(ASSIGNMENTS_KEY, JSON.stringify([]));
   localStorage.setItem(SUBMISSIONS_KEY, JSON.stringify([]));
   localStorage.setItem(DELETED_STUDENTS_KEY, JSON.stringify([]));
   localStorage.setItem(MONTHLY_REPORTS_KEY, JSON.stringify([]));
@@ -1028,21 +1022,23 @@ export const initializePallasCleanData = async (force: boolean = false): Promise
   localStorage.setItem(ATTENDANCE_RECORDS_KEY, JSON.stringify([]));
   localStorage.setItem(ADMIN_NOTIFICATIONS_KEY, JSON.stringify([]));
   localStorage.setItem(NOTIFIED_SUBMISSIONS_KEY, JSON.stringify([]));
+  localStorage.setItem('mrs_dung_deleted_submissions', JSON.stringify([]));
+  localStorage.setItem('mrs_dung_custom_accounts', JSON.stringify([]));
   localStorage.setItem(DATA_CLEANED_KEY, 'true');
   localStorage.setItem(PALLAS_MIGRATION_KEY, 'true');
 
-  localStorage.setItem('mrs_dung_selected_student', 'Học Sinh Pallas');
-  localStorage.setItem('mrs_dung_active_student_name', 'Học Sinh Pallas');
-  localStorage.setItem('mrs_dung_selected_class', 'Lớp Pallas Star');
-  localStorage.setItem('mrs_dung_active_class_name', 'Lớp Pallas Star');
+  localStorage.removeItem('mrs_dung_selected_student');
+  localStorage.removeItem('mrs_dung_active_student_name');
+  localStorage.removeItem('mrs_dung_selected_class');
+  localStorage.removeItem('mrs_dung_active_class_name');
 
   invalidateAllCaches();
 
   try {
     await Promise.all([
-      syncToFirebaseIfConfigured('classes', [PALLAS_TEST_CLASS]),
-      syncToFirebaseIfConfigured('students', [PALLAS_TEST_STUDENT]),
-      syncToFirebaseIfConfigured('assignments', [PALLAS_TEST_ASSIGNMENT]),
+      syncToFirebaseIfConfigured('classes', []),
+      syncToFirebaseIfConfigured('students', []),
+      syncToFirebaseIfConfigured('assignments', []),
       syncToFirebaseIfConfigured('submissions', []),
       syncToFirebaseIfConfigured('deleted_students', []),
       syncToFirebaseIfConfigured('monthly_reports', []),
@@ -1050,7 +1046,8 @@ export const initializePallasCleanData = async (force: boolean = false): Promise
       syncToFirebaseIfConfigured('annual_reports', []),
       syncToFirebaseIfConfigured('class_schedules', []),
       syncToFirebaseIfConfigured('attendance_records', []),
-      syncToFirebaseIfConfigured('admin_notifications', [])
+      syncToFirebaseIfConfigured('admin_notifications', []),
+      syncToFirebaseIfConfigured('deleted_submissions', [])
     ]);
   } catch (e) {
     console.warn('Firebase reset error:', e);
@@ -1059,7 +1056,7 @@ export const initializePallasCleanData = async (force: boolean = false): Promise
   notifySync('data_reset_all', { timestamp: Date.now() });
 };
 
-const DEFAULT_ASSIGNMENTS: Assignment[] = [PALLAS_TEST_ASSIGNMENT];
+const DEFAULT_ASSIGNMENTS: Assignment[] = [];
 
 /**
  * Kiểm tra tên lớp mềm dẻo giữa tài khoản học sinh, bài tập và bài nộp
@@ -1161,7 +1158,7 @@ export const getAssignments = (classId?: string): Assignment[] => {
       if (raw) {
         const all: Assignment[] = JSON.parse(raw);
         if (Array.isArray(all) && all.length > 0) {
-          cleanAll = all.filter(a => a && a.id && a.id !== 'assign_unit1_school');
+          cleanAll = all.filter(a => a && a.id && a.id !== 'assign_unit1_school' && a.id !== 'assign_pallas_unit1');
         }
       }
 
@@ -1194,10 +1191,6 @@ export const getAssignments = (classId?: string): Assignment[] => {
         return (isNaN(timeB) ? 0 : timeB) - (isNaN(timeA) ? 0 : timeA);
       });
 
-      if (sanitizedAll.length === 0) {
-        sanitizedAll.push(PALLAS_TEST_ASSIGNMENT);
-      }
-
       cachedAssignmentsRaw = raw;
       cachedAssignmentsClean = sanitizedAll;
       cachedAssignmentsByClass.clear();
@@ -1213,9 +1206,9 @@ export const getAssignments = (classId?: string): Assignment[] => {
       return filtered;
     }
 
-    return cachedAssignmentsClean && cachedAssignmentsClean.length > 0 ? cachedAssignmentsClean : [PALLAS_TEST_ASSIGNMENT];
+    return cachedAssignmentsClean || [];
   } catch {
-    return [PALLAS_TEST_ASSIGNMENT];
+    return [];
   }
 };
 
@@ -2387,13 +2380,6 @@ export const initCloudSync = (): (() => void) => {
   const doSync = async () => {
     try {
       await initializePallasCleanData();
-      // Seed if empty
-      await seedFirebaseIfEmpty({
-        classes: getClasses(),
-        students: getStudents(),
-        assignments: getAssignments(),
-        submissions: getSubmissions()
-      });
 
       // Pull latest
       const updated = await pullAllFromFirebase();

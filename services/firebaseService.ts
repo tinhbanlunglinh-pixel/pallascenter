@@ -612,8 +612,8 @@ export const pullAllFromFirebase = async (): Promise<boolean> => {
 
     let hasNewData = false;
 
-    const MOCK_CLASS_IDS = new Set(['class_6a1', 'class_6a2', 'class_7b1', 'class_8a1']);
-    const MOCK_STUDENT_IDS = new Set(Array.from({ length: 17 }, (_, i) => `std_${i + 1}`));
+    const MOCK_CLASS_IDS = new Set(['class_6a1', 'class_6a2', 'class_7b1', 'class_8a1', 'class_pallas_star']);
+    const MOCK_STUDENT_IDS = new Set(['std_pallas_01', ...Array.from({ length: 17 }, (_, i) => `std_${i + 1}`)]);
 
     const isMockItem = (key: string, item: any): boolean => {
       if (!item || !item.id) return true;
@@ -627,7 +627,7 @@ export const pullAllFromFirebase = async (): Promise<boolean> => {
         return item.id.startsWith('sub_seed_') || deletedSubIdsSet.has(String(item.id)) || (item.studentId && (MOCK_STUDENT_IDS.has(item.studentId) || deletedIdsSet.has(String(item.studentId))));
       }
       if (key === 'mrs_dung_assignments') {
-        return item.id === 'assign_unit1_school';
+        return item.id === 'assign_unit1_school' || item.id === 'assign_pallas_unit1';
       }
       return false;
     };
