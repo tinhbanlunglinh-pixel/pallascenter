@@ -15,6 +15,7 @@ import {
   deleteStudent,
   subscribeToSync,
   clearAllDemoData,
+  resetAllDataToPureCleanState,
   getAssignments,
   getSubmissions,
   isStudentMatch,
@@ -153,17 +154,15 @@ export const StudentManagement: React.FC = () => {
   const handleResetData = async () => {
     const confirmed = confirm(
       '⚠️ XÁC NHẬN RESET DỮ LIỆU THẬT:\n\n' +
-      'Thao tác này sẽ xóa toàn bộ danh sách lớp học, học sinh mẫu và điểm giả lập để đưa ứng dụng về trạng thái 100% dữ liệu thực tế của cô.\n\n' +
+      'Thao tác này sẽ xóa toàn bộ danh sách lớp học, học sinh, bài tập và điểm số cũ trên máy và đám mây Firebase để đưa ứng dụng về trạng thái 100% dữ liệu thực tế của cô (Tài khoản giáo viên và API Key được giữ nguyên).\n\n' +
       'Cô có chắc chắn muốn thực hiện?'
     );
     if (!confirmed) return;
 
     setIsResetting(true);
-    await clearAllDemoData();
-    setIsResetting(false);
-    setSelectedClassId('');
-    refresh();
-    alert('Đã xóa toàn bộ dữ liệu mẫu thành công! Bây giờ cô có thể bắt đầu tạo lớp và thêm học sinh thật.');
+    await resetAllDataToPureCleanState();
+    alert('✓ Đã xóa sạch toàn bộ dữ liệu thành công! Bây giờ cô có thể bắt đầu tạo lớp và thêm học sinh thật.');
+    window.location.reload();
   };
 
   // 5. Thêm 1 học sinh

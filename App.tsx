@@ -10,7 +10,6 @@ import { StudentDashboard } from './components/student/StudentDashboard';
 import { SettingsModal } from './components/SettingsModal';
 import { LearningHistory } from './components/LearningHistory';
 import { VisitCounter } from './components/VisitCounter';
-import { AdminNotificationBell } from './components/teacher/AdminNotificationBell';
 import { PallasContactBlock } from './components/PallasContactBlock';
 
 export const PallasLogo = ({ className = "w-16 h-16", alt = "Trung Tâm Ngoại Ngữ Pallas" }: { className?: string; alt?: string; color?: string }) => (
@@ -172,11 +171,6 @@ function App() {
                 <span className="hidden md:inline">{isHeaderSyncing ? 'Đang đồng bộ...' : '🔥 Cloud Sync'}</span>
                 <span className="md:hidden">{isHeaderSyncing ? '...' : '🔥 Sync'}</span>
               </button>
-            )}
-
-            {/* Admin Notification Bell (For teacher) */}
-            {currentUser.role === 'teacher' && (
-              <AdminNotificationBell />
             )}
 
             {/* History Button */}

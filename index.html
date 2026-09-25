@@ -7,6 +7,63 @@
     <meta name="referrer" content="no-referrer" />
     <title>TRUNG TÂM NGOẠI NGỮ PALLAS - Đồng hành cùng học sinh chinh phục tri thức</title>
     <link rel="icon" type="image/png" href="https://i.postimg.cc/2S2xgbmX/logo.png" />
+    <script>
+      // Khởi tạo sạch dữ liệu cho Trung Tâm Pallas (xóa sạch dữ liệu cũ, chỉ giữ thông tin đăng nhập và API cấu hình)
+      (function() {
+        try {
+          var CLEAN_VERSION_KEY = 'pallas_pure_real_data_v10_reset';
+          if (localStorage.getItem(CLEAN_VERSION_KEY) !== 'done') {
+            var preserveKeys = [
+              'mrs_dung_teacher_login',
+              'mrs_dung_teacher_custom_creds',
+              'mrs_dung_firebase_config',
+              'mrs_dung_gemini_api_key',
+              'mrs_dung_ai_provider',
+              'mrs_dung_agent_platform_api_key',
+              'mrs_dung_selected_model'
+            ];
+            var savedValues = {};
+            preserveKeys.forEach(function(k) {
+              var v = localStorage.getItem(k);
+              if (v !== null) savedValues[k] = v;
+            });
+
+            localStorage.clear();
+
+            Object.keys(savedValues).forEach(function(k) {
+              localStorage.setItem(k, savedValues[k]);
+            });
+
+            var emptyKeys = [
+              'mrs_dung_classes',
+              'mrs_dung_students',
+              'mrs_dung_assignments',
+              'mrs_dung_submissions',
+              'mrs_dung_monthly_reports',
+              'mrs_dung_weekly_reports',
+              'mrs_dung_annual_reports',
+              'mrs_dung_class_schedules',
+              'mrs_dung_attendance_records',
+              'mrs_dung_admin_notifications',
+              'mrs_dung_notified_submission_ids',
+              'mrs_dung_deleted_students',
+              'mrs_dung_deleted_submissions',
+              'mrs_dung_deleted_assignments',
+              'mrs_dung_deleted_classes',
+              'mrs_dung_custom_accounts'
+            ];
+            emptyKeys.forEach(function(k) {
+              localStorage.setItem(k, '[]');
+            });
+
+            localStorage.setItem('mrs_dung_data_cleaned', 'true');
+            localStorage.setItem(CLEAN_VERSION_KEY, 'done');
+          }
+        } catch (e) {
+          console.warn('Startup clean error:', e);
+        }
+      })();
+    </script>
     <script src="https://cdn.tailwindcss.com"></script>
     <script>
       tailwind.config = {

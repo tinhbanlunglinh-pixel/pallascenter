@@ -7,7 +7,7 @@ import { MonthlyReportAggregator } from './MonthlyReportAggregator';
 import { AnnualReportAggregator } from './AnnualReportAggregator';
 import { ScheduleAndAttendance } from './ScheduleAndAttendance';
 import { TopPerformersHonor } from './TopPerformersHonor';
-import { getClasses, getStudents, getAssignments, getSubmissions, subscribeToSync, forceCloudSyncNow } from '../../services/assignmentService';
+import { getClasses, getStudents, getAssignments, getSubmissions, subscribeToSync, forceCloudSyncNow, resetAllDataToPureCleanState } from '../../services/assignmentService';
 import { Assignment } from '../../types';
 
 interface TeacherDashboardProps {
@@ -19,6 +19,7 @@ export const TeacherDashboard: React.FC<TeacherDashboardProps> = ({ onOpenSettin
   const [activeTab, setActiveTab] = useState<'create' | 'repository' | 'students' | 'schedule' | 'summary' | 'monthly' | 'annual' | 'top'>('create');
   const [editingAssignment, setEditingAssignment] = useState<Assignment | null>(null);
   const [isSyncing, setIsSyncing] = useState(false);
+  const [isResetting, setIsResetting] = useState(false);
   const [lastSyncTime, setLastSyncTime] = useState<string>('Vừa xong');
   const [stats, setStats] = useState({
     classesCount: 0,
@@ -51,6 +52,22 @@ export const TeacherDashboard: React.FC<TeacherDashboardProps> = ({ onOpenSettin
     }
   };
 
+  const handleResetData = async () => {
+    const confirmed = window.confirm(
+      '⚠️ CẢNH BÁO: Thao tác này sẽ xóa sạch toàn bộ danh sách lớp, học sinh, kho tài liệu và kết quả nộp bài cũ để hệ thống trở về trạng thái hoàn toàn trắng (Tài khoản giáo viên và API Key vẫn được bảo lưu nguyên vẹn).\n\nCô có chắc chắn muốn xóa không?'
+    );
+    if (!confirmed) return;
+    setIsResetting(true);
+    try {
+      await resetAllDataToPureCleanState();
+      alert('✓ Đã xóa sạch toàn bộ dữ liệu thành công! Hệ thống đã trở về trạng thái hoàn toàn trắng sẵn sàng để cô nhập danh sách lớp và nội dung mới.');
+      window.location.reload();
+    } catch (e: any) {
+      alert('Có lỗi xảy ra: ' + (e?.message || e));
+      setIsResetting(false);
+    }
+  };
+
   useEffect(() => {
     refreshStats();
     const unsubscribe = subscribeToSync(() => {
@@ -77,18 +94,30 @@ export const TeacherDashboard: React.FC<TeacherDashboardProps> = ({ onOpenSettin
               Soạn bài theo ngày, quản lý học sinh theo lớp, tổng hợp và đánh giá kết quả học tập.
             </p>
 
-            {/* Manual Cloud Sync Button */}
+            {/* Cloud Sync & Hard Reset Controls */}
             <div className="flex flex-wrap items-center gap-2.5 mt-3.5">
               <button
                 type="button"
                 onClick={handleForceSync}
-                disabled={isSyncing}
+                disabled={isSyncing || isResetting}
                 className="inline-flex items-center gap-2 px-3.5 py-1.5 bg-white/20 hover:bg-white/30 active:scale-95 text-white rounded-xl text-xs font-bold transition-all border border-white/30 shadow-xs cursor-pointer disabled:opacity-75"
                 title="Tải lại ngay toàn bộ dữ liệu bài nộp, bài tập mới nhất từ máy chủ Firebase"
               >
                 <span className={`text-sm ${isSyncing ? 'animate-spin inline-block' : ''}`}>🔄</span>
                 <span>{isSyncing ? 'Đang đồng bộ đám mây...' : 'Đồng bộ đám mây ngay'}</span>
               </button>
+
+              <button
+                type="button"
+                onClick={handleResetData}
+                disabled={isSyncing || isResetting}
+                className="inline-flex items-center gap-1.5 px-3.5 py-1.5 bg-rose-600/80 hover:bg-rose-700 active:scale-95 text-white rounded-xl text-xs font-bold transition-all border border-rose-400/40 shadow-xs cursor-pointer disabled:opacity-75"
+                title="Xóa toàn bộ dữ liệu cũ trên máy và đám mây để bắt đầu cập nhật nội dung mới"
+              >
+                <span>🗑️</span>
+                <span>{isResetting ? 'Đang xóa sạch...' : 'Xóa sạch dữ liệu (Reset về trắng)'}</span>
+              </button>
+
               <span className="text-[11px] text-brand-100/90 font-medium">
                 Cập nhật lúc: {lastSyncTime}
               </span>

@@ -162,31 +162,6 @@ export const syncSingleSubmissionToFirebase = async (submission: any, retryCount
     if (res.ok) {
       // If was in pending queue, remove it
       removePendingSubmission(submission.id);
-
-      // Đồng bộ thông báo sang Firebase /admin_notifications để giáo viên trên mọi thiết bị đều nhận được
-      try {
-        const notifUrl = getDatabaseEndpoint(cfg.databaseURL, `admin_notifications/${submission.id}`);
-        fetch(`${notifUrl}${authParam}`, {
-          method: 'PUT',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({
-            id: `notif_${submission.id}`,
-            submissionId: submission.id,
-            studentName: submission.studentName,
-            studentClass: submission.studentClass || '',
-            assignmentTitle: submission.assignmentTitle || submission.topic || 'Bài tập',
-            score: typeof submission.score === 'number' ? submission.score : 0,
-            rawScore: submission.rawScore,
-            isLate: !!submission.isLate,
-            totalCorrect: submission.totalCorrect ?? 0,
-            totalQuestions: submission.totalQuestions ?? 55,
-            submittedAt: submission.submittedAt || new Date().toISOString(),
-            isRead: false,
-            createdAt: submission.submittedAt ? new Date(submission.submittedAt).getTime() : Date.now()
-          })
-        }).catch(() => {});
-      } catch {}
-
       return true;
     }
 
@@ -284,6 +259,67 @@ if (typeof window !== 'undefined') {
   });
 }
 
+const MOCK_CLASS_IDS = new Set(['class_6a1', 'class_6a2', 'class_7b1', 'class_8a1', 'class_pallas_star']);
+const MOCK_STUDENT_IDS = new Set(['std_pallas_01', ...Array.from({ length: 17 }, (_, i) => `std_${i + 1}`)]);
+
+export const isMockItem = (_key: string, item: any): boolean => {
+  if (!item || !item.id) return true;
+  const id = String(item.id);
+
+  if (
+    id.startsWith('class_178') ||
+    id.startsWith('class_1790') ||
+    id.startsWith('class_pallas') ||
+    id.startsWith('std_178') ||
+    id.startsWith('std_1790') ||
+    id.startsWith('std_pallas') ||
+    id.startsWith('assign_178') ||
+    id.startsWith('assign_1790') ||
+    id.startsWith('assign_pallas') ||
+    id.startsWith('sub_178') ||
+    id.startsWith('sub_1790') ||
+    id.startsWith('sub_exam_') ||
+    id.startsWith('sub_seed_') ||
+    id.startsWith('sched_class_') ||
+    id.startsWith('att_class_') ||
+    id.startsWith('w_rep_') ||
+    id.startsWith('rep_') ||
+    id.startsWith('report_class_') ||
+    id.startsWith('ann_') ||
+    id === 'assign_unit1_school' ||
+    MOCK_CLASS_IDS.has(id) ||
+    MOCK_STUDENT_IDS.has(id) ||
+    /^std_\d+$/.test(id)
+  ) {
+    return true;
+  }
+
+  if (item.classId && (String(item.classId).startsWith('class_178') || String(item.classId).startsWith('class_1790') || MOCK_CLASS_IDS.has(String(item.classId)))) {
+    return true;
+  }
+  if (item.studentId && (String(item.studentId).startsWith('std_178') || String(item.studentId).startsWith('std_1790'))) {
+    return true;
+  }
+  if (item.assignmentId && (String(item.assignmentId).startsWith('assign_178') || String(item.assignmentId).startsWith('assign_1790'))) {
+    return true;
+  }
+
+  // Trích xuất timestamp từ id nếu có
+  const idMatch = id.match(/(\d{13})/);
+  if (idMatch) {
+    const idTime = parseInt(idMatch[1], 10);
+    if (idTime > 0 && idTime <= 1790320000000) {
+      return true;
+    }
+  }
+
+  const time = new Date(item.createdAt || item.assignedDate || item.submittedAt || 0).getTime();
+  if (time > 0 && time <= 1790320000000) {
+    return true;
+  }
+  return false;
+};
+
 /**
  * Subscribe to Real-time Firebase RTDB events via native Server-Sent Events (SSE).
  * Delivers sub-second instant updates to Teacher Dashboard whenever any student submits.
@@ -321,7 +357,7 @@ export const subscribeToFirebaseRealtime = (onSubmissionChange: (submission: any
         Object.entries(data).forEach(([key, val]: [string, any]) => {
           if (val && typeof val === 'object') {
             const subId = val.id || key;
-            if (subId && val.studentName) {
+            if (subId && val.studentName && !isMockItem('mrs_dung_submissions', { ...val, id: subId })) {
               batchItems.push({ ...val, id: subId });
             }
           }
@@ -331,7 +367,7 @@ export const subscribeToFirebaseRealtime = (onSubmissionChange: (submission: any
       }
 
       const derivedId = data.id || (path ? path.replace(/^\/+/, '') : '');
-      if (derivedId && data.studentName) {
+      if (derivedId && data.studentName && !isMockItem('mrs_dung_submissions', { ...data, id: derivedId })) {
         onSubmissionChange({ ...data, id: derivedId });
         return;
       }
@@ -339,7 +375,7 @@ export const subscribeToFirebaseRealtime = (onSubmissionChange: (submission: any
       // 3. Nested path e.g. /sub_123
       if (path && path.startsWith('/')) {
         const cleanKey = path.substring(1);
-        if (cleanKey && data.studentName) {
+        if (cleanKey && data.studentName && !isMockItem('mrs_dung_submissions', { ...data, id: data.id || cleanKey })) {
           onSubmissionChange({ ...data, id: data.id || cleanKey });
         }
       }
@@ -479,7 +515,7 @@ export const pullSubmissionsOnlyFromFirebase = async (): Promise<any[]> => {
     const newFromCloud: any[] = [];
 
     cloudSubmissions.forEach(item => {
-      if (item && item.id && !String(item.id).startsWith('sub_seed_') && !deletedSubsSet.has(String(item.id))) {
+      if (item && item.id && !isMockItem('mrs_dung_submissions', item) && !deletedSubsSet.has(String(item.id))) {
         const idStr = String(item.id);
         map.set(idStr, item);
         if (!localIdSet.has(idStr)) {
@@ -490,7 +526,7 @@ export const pullSubmissionsOnlyFromFirebase = async (): Promise<any[]> => {
 
     let hasLocalOnly = false;
     localList.forEach(item => {
-      if (item && item.id && !String(item.id).startsWith('sub_seed_') && !deletedSubsSet.has(String(item.id))) {
+      if (item && item.id && !isMockItem('mrs_dung_submissions', item) && !deletedSubsSet.has(String(item.id))) {
         const idStr = String(item.id);
         if (!map.has(idStr)) {
           map.set(idStr, item);
@@ -536,8 +572,7 @@ export const pullAllFromFirebase = async (): Promise<boolean> => {
       fetchFromFirebaseIfConfigured<any>('deleted_submissions'),
       fetchFromFirebaseIfConfigured<any>('monthly_reports'),
       fetchFromFirebaseIfConfigured<any>('class_schedules'),
-      fetchFromFirebaseIfConfigured<any>('attendance_records'),
-      fetchFromFirebaseIfConfigured<any>('admin_notifications')
+      fetchFromFirebaseIfConfigured<any>('attendance_records')
     ]);
 
     const cloudClasses = normalizeFirebaseList(rawClasses);
@@ -612,22 +647,14 @@ export const pullAllFromFirebase = async (): Promise<boolean> => {
 
     let hasNewData = false;
 
-    const MOCK_CLASS_IDS = new Set(['class_6a1', 'class_6a2', 'class_7b1', 'class_8a1', 'class_pallas_star']);
-    const MOCK_STUDENT_IDS = new Set(['std_pallas_01', ...Array.from({ length: 17 }, (_, i) => `std_${i + 1}`)]);
-
-    const isMockItem = (key: string, item: any): boolean => {
-      if (!item || !item.id) return true;
-      if (key === 'mrs_dung_classes') {
-        return MOCK_CLASS_IDS.has(item.id);
-      }
+    const isMockOrDeleted = (key: string, item: any): boolean => {
+      if (isMockItem(key, item)) return true;
+      const id = String(item.id);
       if (key === 'mrs_dung_students') {
-        return MOCK_STUDENT_IDS.has(item.id) || MOCK_CLASS_IDS.has(item.classId) || deletedIdsSet.has(String(item.id));
+        return deletedIdsSet.has(id);
       }
       if (key === 'mrs_dung_submissions') {
-        return item.id.startsWith('sub_seed_') || deletedSubIdsSet.has(String(item.id)) || (item.studentId && (MOCK_STUDENT_IDS.has(item.studentId) || deletedIdsSet.has(String(item.studentId))));
-      }
-      if (key === 'mrs_dung_assignments') {
-        return item.id === 'assign_unit1_school' || item.id === 'assign_pallas_unit1';
+        return deletedSubIdsSet.has(id) || (item.studentId && deletedIdsSet.has(String(item.studentId)));
       }
       return false;
     };
@@ -675,8 +702,11 @@ export const pullAllFromFirebase = async (): Promise<boolean> => {
 
           const cloudItem = map.get(idStr);
           if (!cloudItem) {
-            map.set(idStr, item);
-            needPushUnsynced = true;
+            const itemTime = new Date(item.createdAt || item.assignedDate || item.submittedAt || 0).getTime();
+            if (item.teacherModified && itemTime >= 1790294400000) {
+              map.set(idStr, item);
+              needPushUnsynced = true;
+            }
           } else {
             const localTime = new Date(item.teacherModifiedAt || item[timeField] || item.submittedAt || item.updatedAt || item.createdAt || 0).getTime();
             const cloudTime = new Date(cloudItem.teacherModifiedAt || cloudItem[timeField] || cloudItem.submittedAt || cloudItem.updatedAt || cloudItem.createdAt || 0).getTime();
@@ -726,46 +756,6 @@ export const pullAllFromFirebase = async (): Promise<boolean> => {
     if (mergeById('mrs_dung_monthly_reports', cloudMonthlyReports)) hasNewData = true;
     if (mergeById('mrs_dung_class_schedules', cloudSchedules)) hasNewData = true;
     if (mergeById('mrs_dung_attendance_records', cloudAttendance, 'date')) hasNewData = true;
-
-    // Đồng bộ thông báo admin từ cloud sang local để thông báo được hiển thị đầy đủ trên mọi thiết bị
-    const cloudAdminNotifs = normalizeFirebaseList(rawAdminNotifs);
-    if (cloudAdminNotifs.length > 0) {
-      const localNotifsRaw = localStorage.getItem('mrs_dung_admin_notifications');
-      let localNotifs: any[] = [];
-      try {
-        if (localNotifsRaw) localNotifs = JSON.parse(localNotifsRaw);
-      } catch {
-        localNotifs = [];
-      }
-      if (!Array.isArray(localNotifs)) localNotifs = [];
-
-      const notifMap = new Map<string, any>();
-      cloudAdminNotifs.forEach(n => {
-        if (n && (n.id || n.submissionId)) {
-          const key = n.submissionId || n.id;
-          notifMap.set(key, n);
-        }
-      });
-      localNotifs.forEach(n => {
-        if (n && (n.id || n.submissionId)) {
-          const key = n.submissionId || n.id;
-          if (notifMap.has(key)) {
-            const cloudItem = notifMap.get(key);
-            if (n.isRead && !cloudItem.isRead) {
-              notifMap.set(key, { ...cloudItem, isRead: true });
-            }
-          } else {
-            notifMap.set(key, n);
-          }
-        }
-      });
-      const mergedNotifs = Array.from(notifMap.values())
-        .sort((a, b) => (b.createdAt || 0) - (a.createdAt || 0))
-        .slice(0, 100);
-      try {
-        localStorage.setItem('mrs_dung_admin_notifications', JSON.stringify(mergedNotifs));
-      } catch {}
-    }
 
     // Background push any offline pending submissions
     syncPendingSubmissions();

@@ -186,6 +186,70 @@ export const clearAllDemoData = async (): Promise<void> => {
 const MOCK_CLASS_IDS = new Set(['class_6a1', 'class_6a2', 'class_7b1', 'class_8a1', 'class_pallas_star']);
 const MOCK_STUDENT_IDS = new Set(['std_pallas_01', ...Array.from({ length: 17 }, (_, i) => `std_${i + 1}`)]);
 
+/**
+ * Bộ lọc nhận diện triệt để các dữ liệu cũ/mẫu được tạo trước 25/09/2026
+ * Tuyệt đối không cho phép dữ liệu cũ hiển thị hay đồng bộ lên đám mây.
+ */
+export const isLegacyOrMockItem = (item: any): boolean => {
+  if (!item) return true;
+  const id = String(item.id || '');
+  if (!id) return true;
+
+  if (
+    id.startsWith('class_178') ||
+    id.startsWith('class_1790') ||
+    id.startsWith('class_pallas') ||
+    id.startsWith('std_178') ||
+    id.startsWith('std_1790') ||
+    id.startsWith('std_pallas') ||
+    id.startsWith('assign_178') ||
+    id.startsWith('assign_1790') ||
+    id.startsWith('assign_pallas') ||
+    id.startsWith('sub_178') ||
+    id.startsWith('sub_1790') ||
+    id.startsWith('sub_exam_') ||
+    id.startsWith('sub_seed_') ||
+    id.startsWith('sched_class_') ||
+    id.startsWith('att_class_') ||
+    id.startsWith('w_rep_') ||
+    id.startsWith('rep_') ||
+    id.startsWith('report_class_') ||
+    id.startsWith('ann_') ||
+    id === 'assign_unit1_school' ||
+    MOCK_CLASS_IDS.has(id) ||
+    MOCK_STUDENT_IDS.has(id) ||
+    /^std_\d+$/.test(id)
+  ) {
+    return true;
+  }
+
+  if (item.classId && (String(item.classId).startsWith('class_178') || String(item.classId).startsWith('class_1790') || MOCK_CLASS_IDS.has(String(item.classId)))) {
+    return true;
+  }
+  if (item.studentId && (String(item.studentId).startsWith('std_178') || String(item.studentId).startsWith('std_1790'))) {
+    return true;
+  }
+  if (item.assignmentId && (String(item.assignmentId).startsWith('assign_178') || String(item.assignmentId).startsWith('assign_1790'))) {
+    return true;
+  }
+
+  // Trích xuất timestamp từ id nếu có (mọi id tạo trước hôm nay 1790320000000)
+  const idMatch = id.match(/(\d{13})/);
+  if (idMatch) {
+    const idTime = parseInt(idMatch[1], 10);
+    if (idTime > 0 && idTime <= 1790320000000) {
+      return true;
+    }
+  }
+
+  // Cutoff: Bất kỳ dữ liệu nào tạo trước thời điểm hiện tại (1790320000000)
+  const time = new Date(item.createdAt || item.assignedDate || item.submittedAt || 0).getTime();
+  if (time > 0 && time <= 1790320000000) {
+    return true;
+  }
+  return false;
+};
+
 // ==================== CLASS MANAGEMENT ====================
 export const getClasses = (): ClassRoom[] => {
   if (typeof window === 'undefined') return [];
@@ -196,7 +260,7 @@ export const getClasses = (): ClassRoom[] => {
       if (raw !== null) {
         const parsed = JSON.parse(raw);
         if (Array.isArray(parsed)) {
-          result = parsed.filter(c => c && c.id && !MOCK_CLASS_IDS.has(c.id));
+          result = parsed.filter(c => c && c.id && !MOCK_CLASS_IDS.has(c.id) && !isLegacyOrMockItem(c));
         }
       }
       cachedClassesRaw = raw;
@@ -602,7 +666,7 @@ export const getStudents = (classIdOrName?: string): Student[] => {
       for (const s of all) {
         if (!s || !s.id) continue;
         if (deletedIds.has(s.id)) continue; // Tuyệt đối không nạp học sinh đã xóa
-        if (MOCK_STUDENT_IDS.has(s.id) || (s.classId && MOCK_CLASS_IDS.has(s.classId))) continue;
+        if (MOCK_STUDENT_IDS.has(s.id) || (s.classId && MOCK_CLASS_IDS.has(s.classId)) || isLegacyOrMockItem(s)) continue;
         if (!seenIds.has(s.id)) {
           seenIds.add(s.id);
           deduped.push({
@@ -1002,11 +1066,11 @@ export const PALLAS_TEST_ASSIGNMENT: Assignment = {
   lessonPlan: DEFAULT_SAMPLE_LESSON
 };
 
-const PALLAS_MIGRATION_KEY = 'pallas_pure_real_data_v6';
+const PALLAS_MIGRATION_KEY = 'pallas_pure_real_data_v10_reset';
 
 export const initializePallasCleanData = async (force: boolean = false): Promise<void> => {
   if (typeof window === 'undefined') return;
-  if (!force && localStorage.getItem(PALLAS_MIGRATION_KEY) === 'true') {
+  if (!force && localStorage.getItem(PALLAS_MIGRATION_KEY) === 'done') {
     return;
   }
 
@@ -1023,9 +1087,11 @@ export const initializePallasCleanData = async (force: boolean = false): Promise
   localStorage.setItem(ADMIN_NOTIFICATIONS_KEY, JSON.stringify([]));
   localStorage.setItem(NOTIFIED_SUBMISSIONS_KEY, JSON.stringify([]));
   localStorage.setItem('mrs_dung_deleted_submissions', JSON.stringify([]));
+  localStorage.setItem('mrs_dung_deleted_assignments', JSON.stringify([]));
+  localStorage.setItem('mrs_dung_deleted_classes', JSON.stringify([]));
   localStorage.setItem('mrs_dung_custom_accounts', JSON.stringify([]));
   localStorage.setItem(DATA_CLEANED_KEY, 'true');
-  localStorage.setItem(PALLAS_MIGRATION_KEY, 'true');
+  localStorage.setItem(PALLAS_MIGRATION_KEY, 'done');
 
   localStorage.removeItem('mrs_dung_selected_student');
   localStorage.removeItem('mrs_dung_active_student_name');
@@ -1054,6 +1120,99 @@ export const initializePallasCleanData = async (force: boolean = false): Promise
   }
 
   notifySync('data_reset_all', { timestamp: Date.now() });
+};
+
+/**
+ * Xóa sạch 100% dữ liệu ứng dụng cả trên đám mây Firebase lẫn trình duyệt (trả về trạng thái hoàn toàn trắng)
+ * Chỉ bảo lưu tài khoản giáo viên và cấu hình API.
+ */
+export const resetAllDataToPureCleanState = async (): Promise<boolean> => {
+  if (typeof window === 'undefined') return false;
+
+  const preserveKeys = [
+    'mrs_dung_teacher_login',
+    'mrs_dung_teacher_custom_creds',
+    'mrs_dung_firebase_config',
+    'mrs_dung_gemini_api_key',
+    'mrs_dung_ai_provider',
+    'mrs_dung_agent_platform_api_key',
+    'mrs_dung_selected_model'
+  ];
+  const saved: Record<string, string> = {};
+  preserveKeys.forEach(k => {
+    const v = localStorage.getItem(k);
+    if (v !== null) saved[k] = v;
+  });
+
+  localStorage.clear();
+
+  Object.entries(saved).forEach(([k, v]) => {
+    localStorage.setItem(k, v);
+  });
+
+  const emptyKeys = [
+    CLASSES_KEY,
+    STUDENTS_KEY,
+    ASSIGNMENTS_KEY,
+    SUBMISSIONS_KEY,
+    DELETED_STUDENTS_KEY,
+    MONTHLY_REPORTS_KEY,
+    WEEKLY_REPORTS_KEY,
+    ANNUAL_REPORTS_KEY,
+    CLASS_SCHEDULES_KEY,
+    ATTENDANCE_RECORDS_KEY,
+    ADMIN_NOTIFICATIONS_KEY,
+    NOTIFIED_SUBMISSIONS_KEY,
+    'mrs_dung_deleted_submissions',
+    'mrs_dung_deleted_assignments',
+    'mrs_dung_deleted_classes',
+    'mrs_dung_custom_accounts'
+  ];
+  emptyKeys.forEach(k => {
+    localStorage.setItem(k, JSON.stringify([]));
+  });
+
+  localStorage.setItem(DATA_CLEANED_KEY, 'true');
+  localStorage.setItem(PALLAS_MIGRATION_KEY, 'done');
+
+  invalidateAllCaches();
+
+  // Xóa trực tiếp qua REST API lên Firebase Realtime Database
+  try {
+    const cfg = getFirebaseConfig();
+    if (cfg && cfg.databaseURL) {
+      const collections = [
+        'classes',
+        'students',
+        'assignments',
+        'submissions',
+        'monthly_reports',
+        'weekly_reports',
+        'annual_reports',
+        'class_schedules',
+        'attendance_records',
+        'admin_notifications',
+        'deleted_students',
+        'deleted_submissions',
+        'deleted_assignments',
+        'deleted_classes'
+      ];
+      const authParam = cfg.apiKey ? `?auth=${cfg.apiKey}` : '';
+      await Promise.all(
+        collections.map(async col => {
+          try {
+            const url = `${cfg.databaseURL.replace(/\/+$/, '')}/${col}.json${authParam}`;
+            await fetch(url, { method: 'DELETE' });
+          } catch {}
+        })
+      );
+    }
+  } catch (err) {
+    console.warn('Firebase wipe error:', err);
+  }
+
+  notifySync('data_reset_all', { timestamp: Date.now() });
+  return true;
 };
 
 const DEFAULT_ASSIGNMENTS: Assignment[] = [];
@@ -1158,7 +1317,7 @@ export const getAssignments = (classId?: string): Assignment[] => {
       if (raw) {
         const all: Assignment[] = JSON.parse(raw);
         if (Array.isArray(all) && all.length > 0) {
-          cleanAll = all.filter(a => a && a.id && a.id !== 'assign_unit1_school' && a.id !== 'assign_pallas_unit1');
+          cleanAll = all.filter(a => a && a.id && !isLegacyOrMockItem(a));
         }
       }
 
@@ -1405,7 +1564,7 @@ export const getSubmissions = (assignmentId?: string): Submission[] => {
 
       // Filter out legacy mock seed submissions and defensively sanitize each record
       const cleanAll = all
-        .filter(s => s && typeof s === 'object' && s.id && !String(s.id).startsWith('sub_seed_'))
+        .filter(s => s && typeof s === 'object' && s.id && !isLegacyOrMockItem(s))
         .map(s => {
           const score = typeof s.score === 'number' && !isNaN(s.score) ? s.score : 0;
           const fallback = defaultEval(score);
@@ -1731,283 +1890,26 @@ export const removeDeletedSubmissionTombstone = (submissionId: string): void => 
 };
 
 export const getAdminNotifications = (): AdminNotificationItem[] => {
-  if (typeof window === 'undefined') return [];
-  try {
-    const raw = localStorage.getItem(ADMIN_NOTIFICATIONS_KEY);
-    if (!raw) return [];
-    const list = JSON.parse(raw);
-    if (!Array.isArray(list)) return [];
-
-    // Chỉ giữ lại thông báo cho các bài nộp THỰC TẾ đang có trong hệ thống,
-    // loại bỏ triệt để mọi dữ liệu ảo, bài nộp mẫu sub_seed_, hoặc bài đã bị xóa
-    const submissions = getSubmissions();
-    const subMap = new Map<string, Submission>();
-    submissions.forEach(s => {
-      if (s && s.id && !isSubmissionInDeletedTombstone(s.id) && !String(s.id).startsWith('sub_seed_')) {
-        subMap.set(s.id, s);
-      }
-    });
-
-    const validNotifs: AdminNotificationItem[] = [];
-    list.forEach((n: any) => {
-      if (!n || !n.submissionId) return;
-      if (String(n.submissionId).startsWith('sub_seed_')) return;
-      const sub = subMap.get(n.submissionId);
-      if (sub) {
-        // Đồng bộ thời gian nộp bài chuẩn 100% theo giờ thực của bài nộp
-        const realSubmittedAt = sub.submittedAt || n.submittedAt || new Date().toISOString();
-        const realSubTime = new Date(realSubmittedAt).getTime();
-        validNotifs.push({
-          ...n,
-          studentName: sub.studentName || n.studentName,
-          studentClass: sub.studentClass || n.studentClass,
-          assignmentTitle: sub.assignmentTitle || sub.topic || n.assignmentTitle,
-          score: typeof sub.score === 'number' ? sub.score : n.score,
-          rawScore: sub.rawScore ?? n.rawScore,
-          isLate: sub.isLate ?? n.isLate,
-          totalCorrect: sub.totalCorrect ?? n.totalCorrect,
-          totalQuestions: sub.totalQuestions ?? n.totalQuestions,
-          submittedAt: realSubmittedAt,
-          createdAt: realSubTime
-        });
-      }
-    });
-
-    // Sắp xếp theo giờ nộp bài thực tế mới nhất lên đầu
-    validNotifs.sort((a, b) => {
-      const timeA = new Date(a.submittedAt || a.createdAt).getTime();
-      const timeB = new Date(b.submittedAt || b.createdAt).getTime();
-      return timeB - timeA;
-    });
-
-    return validNotifs;
-  } catch {
-    return [];
-  }
+  return [];
 };
 
-export const saveAdminNotifications = (list: AdminNotificationItem[]): void => {
-  if (typeof window === 'undefined') return;
-  try {
-    localStorage.setItem(ADMIN_NOTIFICATIONS_KEY, JSON.stringify(list.slice(0, 100)));
-  } catch {}
-};
+export const saveAdminNotifications = (_list: AdminNotificationItem[]): void => {};
 
-// ==================== BELL SOUND & SINGLE-NOTIFY MANAGEMENT ====================
+// ==================== BELL SOUND & SUBMISSION NOTIFICATIONS (DISABLED) ====================
 export const BELL_SOUND_MUTED_KEY = 'mrs_dung_bell_sound_muted';
 export const NOTIFIED_SUBMISSIONS_KEY = 'mrs_dung_notified_submission_ids';
 
-export const isBellSoundMuted = (): boolean => {
-  if (typeof window === 'undefined') return false;
-  return localStorage.getItem(BELL_SOUND_MUTED_KEY) === 'true';
-};
-
-export const setBellSoundMuted = (muted: boolean): void => {
-  if (typeof window === 'undefined') return;
-  localStorage.setItem(BELL_SOUND_MUTED_KEY, muted ? 'true' : 'false');
-  notifySync('bell_sound_toggle', { muted });
-};
-
-export const getNotifiedSubmissionIds = (): Set<string> => {
-  if (typeof window === 'undefined') return new Set();
-  try {
-    const raw = localStorage.getItem(NOTIFIED_SUBMISSIONS_KEY);
-    if (!raw) return new Set();
-    const arr = JSON.parse(raw);
-    return new Set(Array.isArray(arr) ? arr : []);
-  } catch {
-    return new Set();
-  }
-};
-
-export const markSubmissionAsNotified = (submissionId: string): void => {
-  if (typeof window === 'undefined' || !submissionId) return;
-  try {
-    const set = getNotifiedSubmissionIds();
-    set.add(submissionId);
-    const arr = Array.from(set).slice(-500);
-    localStorage.setItem(NOTIFIED_SUBMISSIONS_KEY, JSON.stringify(arr));
-  } catch {}
-};
-
-export const playNotificationSound = (force = false): void => {
-  if (typeof window === 'undefined') return;
-  if (!force && isBellSoundMuted()) return; // Tuyệt đối không kêu nếu giáo viên đã tắt chuông
-  try {
-    const AudioCtx = window.AudioContext || (window as any).webkitAudioContext;
-    if (!AudioCtx) return;
-    const ctx = new AudioCtx();
-    const osc = ctx.createOscillator();
-    const gain = ctx.createGain();
-    osc.type = 'sine';
-    const t = ctx.currentTime;
-    osc.frequency.setValueAtTime(698.46, t); // F5
-    osc.frequency.setValueAtTime(880, t + 0.08); // A5
-    osc.frequency.setValueAtTime(1046.5, t + 0.16); // C6
-
-    gain.gain.setValueAtTime(0.12, t);
-    gain.gain.exponentialRampToValueAtTime(0.001, t + 0.4);
-
-    osc.connect(gain);
-    gain.connect(ctx.destination);
-    osc.start(t);
-    osc.stop(t + 0.4);
-  } catch {
-    // Ignore audio permission restrictions before first interaction
-  }
-};
-
-export const testNotificationSound = (): void => {
-  playNotificationSound(true);
-};
-
-export const addAdminNotification = (sub: Submission, silent = false): void => {
-  if (!sub || !sub.studentName || !sub.id) return;
-  if (isSubmissionInDeletedTombstone(sub.id) || String(sub.id).startsWith('sub_seed_')) return;
-
-  // CHÍNH SÁCH QUAN TRỌNG: Thông báo bài nộp chỉ hiện 1 lần duy nhất trong vòng đời
-  const notifiedSet = getNotifiedSubmissionIds();
-  if (notifiedSet.has(sub.id)) return;
-  markSubmissionAsNotified(sub.id);
-
-  const current = getAdminNotifications();
-  if (current.some(n => n.submissionId === sub.id)) return;
-
-  const realSubmittedAt = sub.submittedAt || new Date().toISOString();
-  const realSubTime = new Date(realSubmittedAt).getTime();
-
-  const notif: AdminNotificationItem = {
-    id: `notif_${sub.id}`,
-    submissionId: sub.id,
-    studentName: sub.studentName,
-    studentClass: sub.studentClass || '',
-    assignmentTitle: sub.assignmentTitle || sub.topic || 'Bài tập',
-    score: typeof sub.score === 'number' ? sub.score : 0,
-    rawScore: sub.rawScore,
-    isLate: sub.isLate,
-    totalCorrect: sub.totalCorrect ?? 0,
-    totalQuestions: sub.totalQuestions ?? 55,
-    submittedAt: realSubmittedAt,
-    isRead: false,
-    createdAt: realSubTime
-  };
-
-  const updated = [notif, ...current].slice(0, 100);
-  saveAdminNotifications(updated);
-  if (!silent) {
-    notifySync('new_admin_notification', notif);
-    playNotificationSound();
-  }
-};
-
-export const addAdminNotificationsBatch = (subs: Submission[], silent = true): void => {
-  if (!Array.isArray(subs) || subs.length === 0) return;
-  const current = getAdminNotifications();
-  const existingSubIds = new Set(current.map(n => n.submissionId));
-  const notifiedSet = getNotifiedSubmissionIds();
-
-  const newNotifs: AdminNotificationItem[] = [];
-  subs.forEach(sub => {
-    if (!sub || !sub.studentName || !sub.id) return;
-    if (isSubmissionInDeletedTombstone(sub.id) || String(sub.id).startsWith('sub_seed_')) return;
-    // Đảm bảo mỗi bài nộp chỉ thông báo 1 lần duy nhất
-    if (notifiedSet.has(sub.id) || existingSubIds.has(sub.id)) return;
-    markSubmissionAsNotified(sub.id);
-    existingSubIds.add(sub.id);
-
-    const realSubmittedAt = sub.submittedAt || new Date().toISOString();
-    const realSubTime = new Date(realSubmittedAt).getTime();
-
-    newNotifs.push({
-      id: `notif_${sub.id}`,
-      submissionId: sub.id,
-      studentName: sub.studentName,
-      studentClass: sub.studentClass || '',
-      assignmentTitle: sub.assignmentTitle || sub.topic || 'Bài tập',
-      score: typeof sub.score === 'number' ? sub.score : 0,
-      rawScore: sub.rawScore,
-      isLate: sub.isLate,
-      totalCorrect: sub.totalCorrect ?? 0,
-      totalQuestions: sub.totalQuestions ?? 55,
-      submittedAt: realSubmittedAt,
-      isRead: false,
-      createdAt: realSubTime
-    });
-  });
-
-  if (newNotifs.length > 0) {
-    const updated = [...newNotifs, ...current].slice(0, 100);
-    saveAdminNotifications(updated);
-    if (!silent) {
-      notifySync('new_admin_notification', newNotifs[0]);
-      playNotificationSound();
-    } else {
-      notifySync('admin_notifications_updated');
-    }
-  }
-};
-
-export const markNotificationsAsRead = (): void => {
-  const current = getAdminNotifications();
-  const updated = current.map(n => ({ ...n, isRead: true }));
-  saveAdminNotifications(updated);
-  notifySync('admin_notifications_read');
-};
-
-export const clearAdminNotifications = (): void => {
-  try {
-    // Đánh dấu toàn bộ bài nộp hiện tại là đã từng thông báo để không bao giờ hiện lại
-    const subs = getSubmissions();
-    const set = getNotifiedSubmissionIds();
-    subs.forEach(s => { if (s && s.id) set.add(s.id); });
-    localStorage.setItem(NOTIFIED_SUBMISSIONS_KEY, JSON.stringify(Array.from(set).slice(-500)));
-  } catch {}
-  saveAdminNotifications([]);
-  notifySync('admin_notifications_read');
-};
-
-let lastReconcileTime = 0;
-
-/**
- * Tự động đối soát và bù đắp các thông báo bị thiếu cho giáo viên:
- * Quét các bài nộp gần đây (trong vòng 2 giờ).
- * CHỈ thông báo bài nào CHƯA TỪNG ĐƯỢC THÔNG BÁO (chỉ hiện 1 lần duy nhất).
- * Chạy ở chế độ silent=true để tuyệt đối không kêu chuông hay hiện toast ảo khi reload trang.
- */
-export const reconcileAdminNotifications = (isRealtime = false): void => {
-  if (typeof window === 'undefined') return;
-
-  const now = Date.now();
-  // Khóa chống lặp vô hạn / nghẽn CPU: chỉ cho phép chạy tối đa 1 lần mỗi 60 giây
-  if (now - lastReconcileTime < 60000) return;
-  lastReconcileTime = now;
-
-  try {
-    const submissions = getSubmissions();
-    if (!Array.isArray(submissions) || submissions.length === 0) return;
-
-    const currentNotifs = getAdminNotifications();
-    const existingNotifSubIds = new Set(currentNotifs.map(n => n.submissionId));
-    const alreadyNotifiedIds = getNotifiedSubmissionIds();
-
-    // Lọc các bài nộp gần đây (trong 2 giờ trở lại đây) mà CHƯA TỪNG được thông báo
-    const TWO_HOURS_AGO = Date.now() - (2 * 60 * 60 * 1000);
-    const missingSubs = submissions.filter(s => {
-      if (!s || !s.id || !s.studentName || isSubmissionInDeletedTombstone(s.id)) return false;
-      if (String(s.id).startsWith('sub_seed_')) return false;
-      // Bỏ qua tuyệt đối nếu đã từng được thông báo
-      if (alreadyNotifiedIds.has(s.id) || existingNotifSubIds.has(s.id)) return false;
-      const subTime = s._subTime || new Date(s.submittedAt || s.createdAt || 0).getTime();
-      return subTime >= TWO_HOURS_AGO;
-    }).slice(0, 15);
-
-    if (missingSubs.length > 0) {
-      addAdminNotificationsBatch(missingSubs, true);
-    }
-  } catch (err) {
-    console.warn('Error in reconcileAdminNotifications:', err);
-  }
-};
+export const isBellSoundMuted = (): boolean => true;
+export const setBellSoundMuted = (_muted: boolean): void => {};
+export const getNotifiedSubmissionIds = (): Set<string> => new Set();
+export const markSubmissionAsNotified = (_submissionId: string): void => {};
+export const playNotificationSound = (_force = false): void => {};
+export const testNotificationSound = (): void => {};
+export const addAdminNotification = (_sub: Submission, _silent = false): void => {};
+export const addAdminNotificationsBatch = (_subs: Submission[], _silent = true): void => {};
+export const markNotificationsAsRead = (): void => {};
+export const clearAdminNotifications = (): void => {};
+export const reconcileAdminNotifications = (_isRealtime = false): void => {};
 
 
 export const saveSubmission = async (
@@ -2096,8 +1998,7 @@ export const saveSubmission = async (
     console.warn('LocalStorage save failed:', err);
   }
 
-  // Thêm vào thông báo admin và phát tín hiệu sync
-  addAdminNotification(safeSubmission);
+  // Phát tín hiệu sync
   notifySync('submission_created', safeSubmission);
 
   // Push single submission directly to Firebase (safe atomic update, eliminates overwrite risk)
@@ -2384,7 +2285,6 @@ export const initCloudSync = (): (() => void) => {
       // Pull latest
       const updated = await pullAllFromFirebase();
       if (isMounted) {
-        reconcileAdminNotifications(false);
         if (updated) {
           notifySync('cloud_sync_completed');
         }
@@ -2434,7 +2334,6 @@ export const initCloudSync = (): (() => void) => {
           const merged = Array.from(map.values());
           localStorage.setItem(SUBMISSIONS_KEY, JSON.stringify(merged));
           invalidateSubmissionsCache();
-          reconcileAdminNotifications(false);
           notifySync('cloud_sync_completed');
         }
         return;
@@ -2470,7 +2369,6 @@ export const initCloudSync = (): (() => void) => {
 
       localStorage.setItem(SUBMISSIONS_KEY, JSON.stringify(list));
       invalidateSubmissionsCache();
-      addAdminNotification(sanitizedSub);
       notifySync('submission_created', sanitizedSub);
     } catch (err) {
       console.warn('Failed to apply real-time submission update:', err);
@@ -2485,7 +2383,6 @@ export const initCloudSync = (): (() => void) => {
       const newSubs = await pullSubmissionsOnlyFromFirebase();
       if (newSubs.length > 0 && isMounted) {
         invalidateSubmissionsCache();
-        addAdminNotificationsBatch(newSubs as Submission[]);
         notifySync('submission_created', newSubs[0]);
       }
     } catch {
@@ -2499,7 +2396,6 @@ export const initCloudSync = (): (() => void) => {
     try {
       const updated = await pullAllFromFirebase();
       if (isMounted) {
-        reconcileAdminNotifications(false);
         if (updated) {
           invalidateAllCaches();
           notifySync('cloud_sync_completed');
@@ -2510,7 +2406,7 @@ export const initCloudSync = (): (() => void) => {
     }
   }, 60000);
 
-  // 4. Watchdog tab visibilitychange with 30s throttle: Bù đắp thông báo khi giáo viên mở lại tab
+  // 4. Watchdog tab visibilitychange with 30s throttle
   let lastVisibilityPull = 0;
   const handleVisibility = () => {
     const now = Date.now();
@@ -2520,10 +2416,8 @@ export const initCloudSync = (): (() => void) => {
       pullSubmissionsOnlyFromFirebase().then(newSubs => {
         if (newSubs.length > 0 && isMounted) {
           invalidateSubmissionsCache();
-          addAdminNotificationsBatch(newSubs as Submission[]);
           notifySync('submission_created', newSubs[0]);
         }
-        reconcileAdminNotifications(false);
       });
     }
   };
@@ -2557,10 +2451,11 @@ export const getMonthlyReports = (classId?: string): MonthlyReport[] => {
     if (!raw) return [];
     const all: MonthlyReport[] = JSON.parse(raw);
     if (!Array.isArray(all)) return [];
+    const valid = all.filter(r => r && !isLegacyOrMockItem(r) && !isLegacyOrMockItem({ id: r.classId }));
     if (classId && classId !== 'ALL') {
-      return all.filter(r => r.classId === classId);
+      return valid.filter(r => r.classId === classId);
     }
-    return all;
+    return valid;
   } catch {
     return [];
   }
@@ -2794,10 +2689,11 @@ export const getWeeklyReports = (classId?: string): WeeklyReportRecord[] => {
     if (!raw) return [];
     const all: WeeklyReportRecord[] = JSON.parse(raw);
     if (!Array.isArray(all)) return [];
+    const valid = all.filter(r => r && !isLegacyOrMockItem(r) && !isLegacyOrMockItem({ id: r.classId }));
     if (classId && classId !== 'ALL') {
-      return all.filter(r => r.classId === classId);
+      return valid.filter(r => r.classId === classId);
     }
-    return all;
+    return valid;
   } catch {
     return [];
   }
@@ -2842,28 +2738,17 @@ export const calculateStudentWeeklyAverage = (
 
 // ==================== CLASS SCHEDULE MANAGEMENT ====================
 export const getClassSchedules = (): ClassScheduleConfig[] => {
-  if (typeof window === 'undefined') return DEFAULT_CLASS_SCHEDULES;
+  if (typeof window === 'undefined') return [];
   try {
     const raw = localStorage.getItem(CLASS_SCHEDULES_KEY);
-    if (!raw) {
-      localStorage.setItem(CLASS_SCHEDULES_KEY, JSON.stringify(DEFAULT_CLASS_SCHEDULES));
-      return DEFAULT_CLASS_SCHEDULES;
-    }
+    if (!raw) return [];
     const parsed = JSON.parse(raw);
-    if (Array.isArray(parsed) && parsed.length > 0) {
-      // Đảm bảo tất cả các lớp chuẩn có trong danh sách
-      const merged = [...parsed];
-      DEFAULT_CLASS_SCHEDULES.forEach(def => {
-        if (!merged.some(m => m.classId === def.classId)) {
-          merged.push(def);
-        }
-      });
-      return merged;
+    if (Array.isArray(parsed)) {
+      return parsed.filter(s => s && !isLegacyOrMockItem(s) && !isLegacyOrMockItem({ id: s.classId }));
     }
-    localStorage.setItem(CLASS_SCHEDULES_KEY, JSON.stringify(DEFAULT_CLASS_SCHEDULES));
-    return DEFAULT_CLASS_SCHEDULES;
+    return [];
   } catch {
-    return DEFAULT_CLASS_SCHEDULES;
+    return [];
   }
 };
 
@@ -3122,6 +3007,7 @@ export const getAttendanceRecords = (classId?: string, date?: string): Attendanc
     if (!raw) return [];
     let list: AttendanceRecord[] = JSON.parse(raw);
     if (!Array.isArray(list)) return [];
+    list = list.filter(r => r && !isLegacyOrMockItem(r) && !isLegacyOrMockItem({ id: r.classId }));
     if (classId && classId !== 'ALL') {
       list = list.filter(r => r.classId === classId);
     }
@@ -3168,6 +3054,7 @@ export const getAnnualReports = (classId?: string, year?: number): AnnualReport[
     if (!raw) return [];
     let list: AnnualReport[] = JSON.parse(raw);
     if (!Array.isArray(list)) return [];
+    list = list.filter(r => r && !isLegacyOrMockItem(r) && !isLegacyOrMockItem({ id: r.classId }));
     if (classId && classId !== 'ALL') {
       list = list.filter(r => r.classId === classId);
     }
